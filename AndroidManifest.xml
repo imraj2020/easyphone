@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      package="android.easyphone"
+      android:versionCode="1"
+      android:versionName="1.0">
+    <application android:icon="@drawable/icon" android:label="@string/app_name" android:debuggable="true">
+        
+        <activity android:name=".easyphone"
+                  android:label="@string/app_name" 
+                  android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+	    <activity android:name=".IncomingCall" android:noHistory="true" android:label="@string/app_name" android:screenOrientation="portrait">
+		    <intent-filter>
+		        <action android:name="android.intent.action.ANSWER" />
+		        <action android:name="android.easyphone.CLOSE_INCOMINGCALL_ACTIVITY" />
+		        <category android:name="android.intent.category.DEFAULT" />
+		    </intent-filter>
+	    </activity>
+	    
+		<activity android:name=".InCall" android:screenOrientation="portrait">
+		<intent-filter>
+		        <action android:name="android.easyphone.CLOSE_INCALL_ACTIVITY" />
+		        <action android:name="android.easyphone.action.INCALL" />
+		    </intent-filter>
+		</activity>
+		
+		<activity android:name=".ContactList" android:screenOrientation="portrait"></activity>
+</application>
+
+
+	<uses-sdk android:targetSdkVersion="8" android:minSdkVersion="8"></uses-sdk>
+	
+	<uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
+	<uses-permission android:name="android.permission.MODIFY_PHONE_STATE"></uses-permission>
+	<uses-permission android:name="android.permission.CALL_PHONE"></uses-permission>
+
+	<receiver android:name=".CallControl">
+		<intent-filter android:priority="99999">
+	    	<action android:name="android.intent.action.PHONE_STATE" />
+	    </intent-filter>
+	</receiver>
+</manifest> 
