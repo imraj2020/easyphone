@@ -41,6 +41,15 @@ public class ContactList extends Activity {
     }
     
     @Override
+    public void onStop()
+    {
+    	Log.v(easyphone.EASYPHONE_TAG, "ContactList.onStop()");
+    	super.onStop();
+    	
+    	mMenu.stopScanning();
+    }
+    
+    @Override
     public boolean onTouchEvent(MotionEvent event)
     { 
     	Log.v(easyphone.EASYPHONE_TAG, "ContactList.onTouchEvent()");
@@ -89,16 +98,19 @@ public class ContactList extends Activity {
     	{
 	    	case 0:  
 	    	{
+	    		easyphone.mTTS.playEarcon("click", TextToSpeech.QUEUE_FLUSH, null);
 	    		easyphone.callControl.makeCall("216014201", getApplicationContext());
 	    		break;
 	    	}
 	    	case 1:
 	    	{
+	    		easyphone.mTTS.playEarcon("click", TextToSpeech.QUEUE_FLUSH, null);
 	    		easyphone.callControl.makeCall("219205537", getApplicationContext());
 	    		break;
 	    	}
 	    	case 2:
 	    	{
+	    		easyphone.mTTS.playEarcon("back", TextToSpeech.QUEUE_FLUSH, null);
 	    		this.finish();
 	    		break;
 	    	}
