@@ -37,10 +37,12 @@ public class InCall extends Activity {
     }
     
     @Override
-    public void onStart()
+    public void onStop()
     {
-    	Log.v(easyphone.EASYPHONE_TAG, "InCall.onStart()");
-    	super.onStart();
+    	Log.v(easyphone.EASYPHONE_TAG, "ContactList.onStop()");
+    	super.onStop();
+    	
+    	mMenu.stopScanning();
     }
     
     @Override
@@ -58,25 +60,8 @@ public class InCall extends Activity {
                  break;
               }
               case MotionEvent.ACTION_UP:
-              {  // finger up event, Select current option
-            	  int option = mMenu.getCurrentOption();
-            	  
-            	  if(option >= 0)
-            	  {
-            		  //is scanning, thus select option
-            		  mMenu.stopScanning();
-            		  selectOption(option);
-            	  }
-            	  else if(option == -1 && mMenu.isScanning())
-            	  {
-            		  mMenu.stopScanning();
-            		  selectOption(0);
-            	  }
-            	  else
-            	  {
-            		//is not scanning, thus start scanning
-            		  mMenu.startScanning(false);
-            	  }
+              {  // finger up event, END CALL
+            	  selectOption(0);
 
                   break;
               }
@@ -92,6 +77,7 @@ public class InCall extends Activity {
 	    	case 0:  
 	    	{
 	    		//End Call
+	    		easyphone.mTTS.playEarcon("back", TextToSpeech.QUEUE_FLUSH, null);
 	    		easyphone.callControl.cancelCall();
 	    		this.finish();
 	    		break;

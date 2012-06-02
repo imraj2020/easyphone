@@ -28,18 +28,36 @@ public class IncomingCall extends Activity{
         getApplicationContext().registerReceiver(receiver, new IntentFilter("android.easyphone.CLOSE_INCOMINGCALL_ACTIVITY"));
         
         //Get UI Elements
-        ((TextView)this.findViewById(R.id.TextView01)).setText("Chamada de, " + easyphone.callControl.getIncomingNumber());
-        mMenu = new MenuManager(2500, 5000);
+        String incomingNumber = easyphone.callControl.getIncomingNumber();
+        if(incomingNumber == null)
+        {
+        	incomingNumber = "Número privado";
+        }
+        else
+        {
+        	String aux = "";
+        	for (char c : incomingNumber.toCharArray())
+            {
+                aux += c;
+                aux += " ";
+            }
+        	incomingNumber = aux;
+        }
+        
+        ((TextView)this.findViewById(R.id.TextView01)).setText("Chamada de, " + incomingNumber);
+        mMenu = new MenuManager(3500, 5000);
         mMenu.setTitle((String) ((TextView)this.findViewById(R.id.TextView01)).getText());
         mMenu.addOption((String) ((TextView)this.findViewById(R.id.TextView02)).getText());
         mMenu.addOption((String) ((TextView)this.findViewById(R.id.TextView03)).getText());
     }
     
     @Override
-    public void onStart()
+    public void onStop()
     {
-    	Log.v(easyphone.EASYPHONE_TAG, "IncomingCall.onStart()");
-    	super.onStart();
+    	Log.v(easyphone.EASYPHONE_TAG, "ContactList.onStop()");
+    	super.onStop();
+    	
+    	mMenu.stopScanning();
     }
     
     @Override
@@ -74,6 +92,7 @@ public class IncomingCall extends Activity{
             	  else
             	  {
             		//is not scanning, thus start scanning
+            		  easyphone.callControl.silenceRinger();
             		  mMenu.startScanning(true);
             	  }
             	  
@@ -91,6 +110,7 @@ public class IncomingCall extends Activity{
 	    	case 0:  
 	    	{
 	    		//Accept call
+	    		easyphone.mTTS.playEarcon("click", TextToSpeech.QUEUE_FLUSH, null);
 	    		easyphone.callControl.answerCall();
 	    		this.finish();
 	    		break;
@@ -99,6 +119,7 @@ public class IncomingCall extends Activity{
 	    	case 1:
 	    	{
 	    		//Reject call
+	    		easyphone.mTTS.playEarcon("back", TextToSpeech.QUEUE_FLUSH, null);
 	    		easyphone.callControl.cancelCall();
 	    		break;
 	    	}

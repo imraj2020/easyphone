@@ -36,17 +36,19 @@ public class MenuManager {
 	
 	public void addOption(String option)
 	{
+		Log.v(easyphone.EASYPHONE_TAG, "MenuManager.addOption()");
 		mOptions.add(option);
 	}
 	
 	public void setTitle(String title)
 	{
+		Log.v(easyphone.EASYPHONE_TAG, "MenuManager.setTitle()");
 		mTitle = title;
 	}
 	
 	public void startScanning(boolean readMenu)
 	{
-		Log.v(easyphone.EASYPHONE_TAG, "ContactList.startScanning()");
+		Log.v(easyphone.EASYPHONE_TAG, "MenuManager.startScanning()");
 		
 		if(easyphone.mTTS == null) return;
 		
@@ -80,7 +82,10 @@ public class MenuManager {
 						if(mCurrentCycle == NCYCLES && mCurrentOption == mOptions.size() - 1)
 						{
 							stopScanning();
+							return;
 						}
+						
+						if(easyphone.callControl.inCall) return; //no options are read when incall mode
 						
 						//next option
 						mCurrentOption++;
@@ -91,7 +96,7 @@ public class MenuManager {
 						}
 						
 						//read current options
-						easyphone.mTTS.speak(mOptions.get(mCurrentOption), TextToSpeech.QUEUE_FLUSH, null);
+						easyphone.mTTS.speak(mOptions.get(mCurrentOption), TextToSpeech.QUEUE_FLUSH, null); //add to queue, after earcon
 					}
 				}, READ_TITLE_TIME, READ_OPTION_TIME);	
 	}
@@ -99,16 +104,19 @@ public class MenuManager {
 	private void readTitle()
 	{
 		Log.v(easyphone.EASYPHONE_TAG, "MenuManager.readTitle()");
+		if(easyphone.callControl.inCall) return; //no options are read when incall mode
     	easyphone.mTTS.speak(mTitle, TextToSpeech.QUEUE_FLUSH, null);
 	}
 	
 	public int getCurrentOption()
 	{
+		Log.v(easyphone.EASYPHONE_TAG, "MenuManager.getCurrentOption()");
 		return mCurrentOption;
 	}
 	
 	public  boolean isScanning()
 	{
+		Log.v(easyphone.EASYPHONE_TAG, "MenuManager.isScanning()");
 		return mIsScanning;
 	}
 

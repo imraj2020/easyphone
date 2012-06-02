@@ -55,6 +55,14 @@ public class easyphone extends Activity implements OnInitListener{
     }
     
     @Override
+    public void onStop()
+    {
+    	Log.v(EASYPHONE_TAG, "easyphone.onStop()");
+    	mMenu.stopScanning();
+    	super.onStop();
+    }
+    
+    @Override
     public boolean onTouchEvent(MotionEvent event)
     { 
     	Log.v(EASYPHONE_TAG, "easyphone.onTouchEvent()");
@@ -102,6 +110,7 @@ public class easyphone extends Activity implements OnInitListener{
     	{
 	    	case 0:  
 	    	{
+	    		mTTS.playEarcon("click", TextToSpeech.QUEUE_FLUSH, null);
 	    		//Call
 	    		Intent contactList =  new Intent(getApplicationContext(), ContactList.class);
 	    		startActivity(contactList);
@@ -137,9 +146,9 @@ public class easyphone extends Activity implements OnInitListener{
     	{
     		Locale locale = Locale.getDefault();
     		mTTS.setLanguage(locale);
-    		//tts.addEarcon("click", "/sdcard/click.wav");
+    		mTTS.addEarcon("click", "/sdcard/click.wav");
     		//tts.addEarcon("error", "/sdcard/error.wav");
-    		//tts.addEarcon("back", "/sdcard/back.wav");
+    		mTTS.addEarcon("back", "/sdcard/invert.wav");
     		
     		//first time read title and options
     		//readTitle();

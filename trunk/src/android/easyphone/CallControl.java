@@ -47,6 +47,7 @@ public class CallControl extends BroadcastReceiver {
 	private boolean wasRinging = false;
 	private boolean makingCall = false;
 	private boolean wasInCall = false;
+	public boolean inCall = false;
 	
 	@Override
 	public void onReceive(final Context context, Intent intent) {
@@ -95,6 +96,7 @@ public class CallControl extends BroadcastReceiver {
 				context.sendBroadcast(i);
 				wasInCall = false;
 			}
+			inCall = false;
 		}
 		else if(state.equalsIgnoreCase(TelephonyManager.EXTRA_STATE_OFFHOOK))
 		{ //CALL ACCEPTED, INCALL
@@ -157,6 +159,7 @@ public class CallControl extends BroadcastReceiver {
 		Log.d(TAG, "Answering call... "+ incomingNumber);
 		try {
 			if(telephonyService == null) getTelephonyService();
+			inCall = true;
 			telephonyService.answerRingingCall();
 			
 		} catch (Exception e) {
