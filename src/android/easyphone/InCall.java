@@ -9,6 +9,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
@@ -34,6 +35,16 @@ public class InCall extends Activity {
         mMenu = new MenuManager(100, 5000);
         mMenu.setTitle((String) ((TextView)this.findViewById(R.id.TextView01)).getText());
         mMenu.addOption((String) ((TextView)this.findViewById(R.id.TextView02)).getText());
+    }
+    
+    @Override
+    public void onStart()
+    {
+    	Log.v(easyphone.EASYPHONE_TAG, "ContactList.onStart()");
+    	super.onStart();
+    	
+    	AudioManager am = (AudioManager)getApplicationContext().getSystemService(getApplicationContext().AUDIO_SERVICE);
+        am.setSpeakerphoneOn(true);
     }
     
     @Override

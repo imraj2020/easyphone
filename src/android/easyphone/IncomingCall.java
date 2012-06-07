@@ -4,6 +4,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -29,9 +30,15 @@ public class IncomingCall extends Activity{
         
         //Get UI Elements
         String incomingNumber = easyphone.callControl.getIncomingNumber();
+        String name = null;
         if(incomingNumber == null)
         {
         	incomingNumber = "Número privado";
+        	((TextView)this.findViewById(R.id.TextView01)).setText("Chamada de, " + incomingNumber);
+        }
+        else if((name = Utils.getContactName(getApplicationContext(), incomingNumber)) != null)
+        {
+        	((TextView)this.findViewById(R.id.TextView01)).setText("Chamada de, " + name);
         }
         else
         {
@@ -41,10 +48,9 @@ public class IncomingCall extends Activity{
                 aux += c;
                 aux += " ";
             }
-        	incomingNumber = aux;
+        	((TextView)this.findViewById(R.id.TextView01)).setText("Chamada de, " + aux);
         }
         
-        ((TextView)this.findViewById(R.id.TextView01)).setText("Chamada de, " + incomingNumber);
         mMenu = new MenuManager(3500, 5000);
         mMenu.setTitle((String) ((TextView)this.findViewById(R.id.TextView01)).getText());
         mMenu.addOption((String) ((TextView)this.findViewById(R.id.TextView02)).getText());
