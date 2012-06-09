@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 public class IncomingCall extends Activity{
@@ -61,9 +62,21 @@ public class IncomingCall extends Activity{
     public void onStop()
     {
     	Log.v(easyphone.EASYPHONE_TAG, "ContactList.onStop()");
-    	super.onStop();
-    	
     	mMenu.stopScanning();
+    	super.onStop();
+    }
+    
+    @Override
+    public void onResume()
+    {
+    	super.onResume();
+    	
+    	easyphone.mTTS.playEarcon("click", TextToSpeech.QUEUE_FLUSH, null);
+    	
+		//Screen Brightness
+        WindowManager.LayoutParams lp = getWindow().getAttributes();
+        lp.screenBrightness = (float) 0;
+        getWindow().setAttributes(lp);
     }
     
     @Override
@@ -116,7 +129,6 @@ public class IncomingCall extends Activity{
 	    	case 0:  
 	    	{
 	    		//Accept call
-	    		easyphone.mTTS.playEarcon("click", TextToSpeech.QUEUE_FLUSH, null);
 	    		easyphone.callControl.answerCall();
 	    		this.finish();
 	    		break;
@@ -125,7 +137,6 @@ public class IncomingCall extends Activity{
 	    	case 1:
 	    	{
 	    		//Reject call
-	    		easyphone.mTTS.playEarcon("back", TextToSpeech.QUEUE_FLUSH, null);
 	    		easyphone.callControl.cancelCall();
 	    		break;
 	    	}

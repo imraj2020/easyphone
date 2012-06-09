@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,9 +45,21 @@ public class ContactList extends Activity {
     public void onStop()
     {
     	Log.v(easyphone.EASYPHONE_TAG, "ContactList.onStop()");
-    	super.onStop();
-    	
     	mMenu.stopScanning();
+    	super.onStop();
+    }
+    
+    @Override
+    public void onResume()
+    {
+    	super.onResume();
+    	
+    	easyphone.mTTS.playEarcon("click", TextToSpeech.QUEUE_ADD, null);
+    	
+		//Screen Brightness
+        WindowManager.LayoutParams lp = getWindow().getAttributes();
+        lp.screenBrightness = (float) 0;
+        getWindow().setAttributes(lp);
     }
     
     @Override
@@ -98,19 +111,16 @@ public class ContactList extends Activity {
     	{
 	    	case 0:  
 	    	{
-	    		easyphone.mTTS.playEarcon("click", TextToSpeech.QUEUE_FLUSH, null);
-	    		easyphone.callControl.makeCall("216014201", getApplicationContext());
+	    		easyphone.callControl.makeCall("912939201", getApplicationContext());
 	    		break;
 	    	}
 	    	case 1:
 	    	{
-	    		easyphone.mTTS.playEarcon("click", TextToSpeech.QUEUE_FLUSH, null);
 	    		easyphone.callControl.makeCall("219205537", getApplicationContext());
 	    		break;
 	    	}
 	    	case 2:
 	    	{
-	    		easyphone.mTTS.playEarcon("back", TextToSpeech.QUEUE_FLUSH, null);
 	    		this.finish();
 	    		break;
 	    	}
