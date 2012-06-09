@@ -1,17 +1,24 @@
 package android.easyphone;
 
+import java.util.Date;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.BatteryManager;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,6 +50,11 @@ public class easyphone extends Activity implements OnInitListener{
         mMenu = new MenuManager();
         mMenu.setTitle((String) ((TextView)this.findViewById(R.id.TextView01)).getText());
         mMenu.addOption((String) ((TextView)this.findViewById(R.id.TextView02)).getText());
+        mMenu.addOption((String) ((TextView)this.findViewById(R.id.TextView03)).getText());
+        mMenu.addOption((String) ((TextView)this.findViewById(R.id.TextView04)).getText());
+        
+        //Battery
+        Utils.registerBatteryListener(getApplicationContext());
     }
     
     @Override
@@ -60,6 +72,27 @@ public class easyphone extends Activity implements OnInitListener{
     	Log.v(EASYPHONE_TAG, "easyphone.onStop()");
     	mMenu.stopScanning();
     	super.onStop();
+    }
+    
+    @Override
+    public void onDestroy()
+    {
+    	Utils.unregisterBatteryListener(getApplicationContext());
+    	super.onDestroy();
+    }
+    
+    @Override
+    public void onResume()
+    {
+    	super.onResume();
+    	
+    	if(mTTS != null)
+    		easyphone.mTTS.playEarcon("click", TextToSpeech.QUEUE_ADD, null);
+    	
+		//Screen Brightness
+        WindowManager.LayoutParams lp = getWindow().getAttributes();
+        lp.screenBrightness = (float) 0;
+        getWindow().setAttributes(lp);
     }
     
     @Override
@@ -108,16 +141,34 @@ public class easyphone extends Activity implements OnInitListener{
     	Log.v(EASYPHONE_TAG, "easyphone.selectOption()");
     	switch(option)
     	{
-	    	case 0:  
+	    	case 0:  //Make call
 	    	{
+	    		Log.v(EASYPHONE_TAG, "make call");
 	    		mTTS.playEarcon("click", TextToSpeech.QUEUE_FLUSH, null);
 	    		//Call
 	    		Intent contactList =  new Intent(getApplicationContext(), ContactList.class);
 	    		startActivity(contactList);
 	    		break;
 	    	}
+	    	case 1: //Clock
+	    	{
+	    		Log.v(EASYPHONE_TAG, "clock");
+	    		mTTS.playEarcon("click", TextToSpeech.QUEUE_FLUSH, null);
+	    		Time now = new Time();
+	    		now.setToNow();
+	    		int hour = now.hour;
+	    		int minute = now.minute;
+	    		mTTS.speak("São " + hour + "horas e " + minute + "minutos", TextToSpeech.QUEUE_ADD, null);
+	    		break;
+	    	}
+	    	case 2: //Battery
+	    	{
+	    		Log.v(EASYPHONE_TAG, "battery");
+	    		mTTS.speak(String.valueOf(Utils.getBatteryLevel()) + " porcento", TextToSpeech.QUEUE_ADD, null);
+	    		break;
+	    	}
     	}
-    }
+    }    
     
     /** Called when TTS reply arrive. */
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -15,6 +15,7 @@ import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +36,9 @@ public class InCall extends Activity {
         mMenu = new MenuManager(100, 5000);
         mMenu.setTitle((String) ((TextView)this.findViewById(R.id.TextView01)).getText());
         mMenu.addOption((String) ((TextView)this.findViewById(R.id.TextView02)).getText());
+        
+        AudioManager am = (AudioManager)getApplicationContext().getSystemService(getApplicationContext().AUDIO_SERVICE);
+        am.setSpeakerphoneOn(true);
     }
     
     @Override
@@ -42,18 +46,26 @@ public class InCall extends Activity {
     {
     	Log.v(easyphone.EASYPHONE_TAG, "ContactList.onStart()");
     	super.onStart();
-    	
-    	AudioManager am = (AudioManager)getApplicationContext().getSystemService(getApplicationContext().AUDIO_SERVICE);
-        am.setSpeakerphoneOn(true);
     }
     
     @Override
     public void onStop()
     {
     	Log.v(easyphone.EASYPHONE_TAG, "ContactList.onStop()");
-    	super.onStop();
-    	
     	mMenu.stopScanning();
+    	super.onStop();
+    }
+    
+    @Override
+    public void onResume()
+    {
+    	super.onResume();
+    	
+    	easyphone.mTTS.playEarcon("click", TextToSpeech.QUEUE_ADD, null);
+		//Screen Brightness
+        WindowManager.LayoutParams lp = getWindow().getAttributes();
+        lp.screenBrightness = (float) 0;
+        getWindow().setAttributes(lp);
     }
     
     @Override
@@ -94,6 +106,14 @@ public class InCall extends Activity {
 	    		break;
 	    	}
     	}
+    }
+    
+    @Override 
+    public void finish()
+    {
+    	AudioManager am = (AudioManager)getApplicationContext().getSystemService(getApplicationContext().AUDIO_SERVICE);
+        am.setSpeakerphoneOn(false);
+    	super.finish();
     }
     
     /* USED BY CALLCONTROL */
