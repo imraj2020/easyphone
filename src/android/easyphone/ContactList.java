@@ -58,7 +58,7 @@ public class ContactList extends Activity {
     	
 		//Screen Brightness
         WindowManager.LayoutParams lp = getWindow().getAttributes();
-        lp.screenBrightness = (float) 0;
+        lp.screenBrightness = (float) 10;
         getWindow().setAttributes(lp);
     }
     

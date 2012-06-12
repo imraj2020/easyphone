@@ -64,7 +64,7 @@ public class InCall extends Activity {
     	easyphone.mTTS.playEarcon("click", TextToSpeech.QUEUE_ADD, null);
 		//Screen Brightness
         WindowManager.LayoutParams lp = getWindow().getAttributes();
-        lp.screenBrightness = (float) 0;
+        lp.screenBrightness = (float) 10;
         getWindow().setAttributes(lp);
     }
     
