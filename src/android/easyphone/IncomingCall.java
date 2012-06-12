@@ -121,6 +121,31 @@ public class IncomingCall extends Activity{
     	return true;
     }
     
+    @Override
+    public void onBackPressed() 
+    {
+    	Log.v(easyphone.EASYPHONE_TAG, "easyphone.onBackPressed()");
+    	// finger up event, Select current option
+    	int option = mMenu.getCurrentOption();
+    	
+    	if(option >= 0)
+	  	{
+	  	 //is scanning, thus select option
+    		mMenu.stopScanning();
+	  		selectOption(option);
+	  	}
+	  	else if(option == -1 && mMenu.isScanning())
+	  	{
+	  		mMenu.stopScanning();
+	  		selectOption(0);
+	  	}
+	  	else
+	  	{
+	  		//is not scanning, thus start scanning
+	  		mMenu.startScanning(true);
+	  	}
+    }
+    
     private void selectOption(int option)
     {
     	Log.v(easyphone.EASYPHONE_TAG, "IncomingCall.selectOption()");

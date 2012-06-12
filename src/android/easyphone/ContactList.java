@@ -30,6 +30,7 @@ public class ContactList extends Activity {
         mMenu.addOption((String) ((TextView)this.findViewById(R.id.TextView02)).getText());
         mMenu.addOption((String) ((TextView)this.findViewById(R.id.TextView03)).getText());
         mMenu.addOption((String) ((TextView)this.findViewById(R.id.TextView04)).getText());
+        mMenu.addOption((String) ((TextView)this.findViewById(R.id.TextView05)).getText());
     }
     
     @Override
@@ -103,6 +104,31 @@ public class ContactList extends Activity {
     	return true;
     }
     
+    @Override
+    public void onBackPressed() 
+    {
+    	Log.v(easyphone.EASYPHONE_TAG, "easyphone.onBackPressed()");
+    	// finger up event, Select current option
+    	int option = mMenu.getCurrentOption();
+    	
+    	if(option >= 0)
+	  	{
+	  	 //is scanning, thus select option
+    		mMenu.stopScanning();
+	  		selectOption(option);
+	  	}
+	  	else if(option == -1 && mMenu.isScanning())
+	  	{
+	  		mMenu.stopScanning();
+	  		selectOption(0);
+	  	}
+	  	else
+	  	{
+	  		//is not scanning, thus start scanning
+	  		mMenu.startScanning(true);
+	  	}
+    }
+    
     private void selectOption(int option)
     {
     	Log.v(easyphone.EASYPHONE_TAG, "ContactList.selectOption()");
@@ -111,15 +137,20 @@ public class ContactList extends Activity {
     	{
 	    	case 0:  
 	    	{
-	    		easyphone.callControl.makeCall("912939201", getApplicationContext());
+	    		easyphone.callControl.makeCall("919205537", getApplicationContext());
 	    		break;
 	    	}
 	    	case 1:
 	    	{
-	    		easyphone.callControl.makeCall("219205537", getApplicationContext());
+	    		easyphone.callControl.makeCall("965360737", getApplicationContext());
 	    		break;
 	    	}
 	    	case 2:
+	    	{
+	    		easyphone.callControl.makeCall("916280481", getApplicationContext());
+	    		break;
+	    	}
+	    	case 3:
 	    	{
 	    		this.finish();
 	    		break;
