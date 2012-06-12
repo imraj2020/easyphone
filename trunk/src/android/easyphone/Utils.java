@@ -56,7 +56,7 @@ public class Utils {
 	private static BroadcastReceiver batteryLevelReceiver = new BroadcastReceiver() {
     	public void onReceive(Context context, Intent intent) {
     		Log.v(easyphone.EASYPHONE_TAG, "Utils.batteryLevelReceiver.onReceive()");
-    		context.unregisterReceiver(this);
+    		//context.unregisterReceiver(this);
             int rawlevel = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
             int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
             int level = -1;
