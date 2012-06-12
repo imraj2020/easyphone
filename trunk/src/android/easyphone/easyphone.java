@@ -16,7 +16,9 @@ import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 import android.text.format.Time;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -134,6 +136,31 @@ public class easyphone extends Activity implements OnInitListener{
               }
             }
     	return true;
+    }
+    
+    @Override
+    public void onBackPressed() 
+    {
+    	Log.v(EASYPHONE_TAG, "easyphone.onBackPressed()");
+    	// finger up event, Select current option
+    	int option = mMenu.getCurrentOption();
+    	
+    	if(option >= 0)
+	  	{
+	  	 //is scanning, thus select option
+    		mMenu.stopScanning();
+	  		selectOption(option);
+	  	}
+	  	else if(option == -1 && mMenu.isScanning())
+	  	{
+	  		mMenu.stopScanning();
+	  		selectOption(0);
+	  	}
+	  	else
+	  	{
+	  		//is not scanning, thus start scanning
+	  		mMenu.startScanning(true);
+	  	}
     }
     
     private void selectOption(int option)
