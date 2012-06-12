@@ -25,6 +25,7 @@ public class IncomingCall extends Activity{
     public void onCreate(Bundle savedInstanceState) {
     	Log.v(easyphone.EASYPHONE_TAG, "IncomingCall.onCreate()");
         super.onCreate(savedInstanceState);
+        getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
         setContentView(R.layout.incomingcall);
         
         getApplicationContext().registerReceiver(receiver, new IntentFilter("android.easyphone.CLOSE_INCOMINGCALL_ACTIVITY"));

@@ -48,6 +48,7 @@
 	<uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
 	<uses-permission android:name="android.permission.MODIFY_PHONE_STATE"></uses-permission>
 	<uses-permission android:name="android.permission.CALL_PHONE"></uses-permission>
+	<uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"></uses-permission>
 
 	<receiver android:name=".CallControl">
 		<intent-filter android:priority="99999">
