@@ -1,17 +1,12 @@
 package android.easyphone;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 import android.app.Activity;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.WindowManager;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class ContactList extends Activity {
 	

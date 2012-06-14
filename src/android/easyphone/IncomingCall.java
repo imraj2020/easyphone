@@ -1,32 +1,135 @@
 package android.easyphone;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 import android.app.Activity;
-import android.app.Application;
+import android.app.KeyguardManager;
+import android.app.KeyguardManager.KeyguardLock;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
+import android.view.View.OnTouchListener;
+import android.view.Window.Callback;
+import android.view.WindowManager.LayoutParams;
+import android.view.accessibility.AccessibilityEvent;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.TextView;
 
 public class IncomingCall extends Activity{
 	private final String TAG = "IncomingCall";
 	private MenuManager mMenu = null;
+	ViewGroup mTopView = null;
     
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	Log.v(easyphone.EASYPHONE_TAG, "IncomingCall.onCreate()");
         super.onCreate(savedInstanceState);
-        getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+        
         setContentView(R.layout.incomingcall);
+        
+        /* ALLWAYS ON TOP WINDOW */
+        WindowManager.LayoutParams params = new WindowManager.LayoutParams( 
+        		WindowManager.LayoutParams.FLAG_FULLSCREEN, 
+        		WindowManager.LayoutParams.FLAG_FULLSCREEN,                 
+        		WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,               
+        		WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
+        		PixelFormat.OPAQUE);
+        WindowManager wm = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);    
+        mTopView = (ViewGroup) this.getLayoutInflater().inflate(R.layout.incomingcall, null);
+        getWindow().setAttributes(params);
+        
+        mTopView.setOnTouchListener(new OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				Log.v(easyphone.EASYPHONE_TAG, "IncomingCall.onTouchEvent()");
+		    	
+				int eventaction = event.getAction(); 
+		    	
+		        switch (eventaction ) { 
+		              case MotionEvent.ACTION_DOWN:
+		              { // touch on the screen event
+		            	  break;
+		              }
+		              case MotionEvent.ACTION_MOVE:
+		              { // move event
+		                 break;
+		              }
+		              case MotionEvent.ACTION_UP:
+		              {  // finger up event, Select current option
+		            	  int option = mMenu.getCurrentOption();
+		            	  
+		            	  if(option >= 0)
+		            	  {
+		            		  //is scanning, thus select option
+		            		  mMenu.stopScanning();
+		            		  selectOption(option);
+		            	  }
+		            	  else if(option == -1 && mMenu.isScanning())
+		            	  {
+		            		  mMenu.stopScanning();
+		            		  selectOption(0);
+		            	  }
+		            	  else
+		            	  {
+		            		//is not scanning, thus start scanning
+		            		  easyphone.callControl.silenceRinger();
+		            		  mMenu.startScanning(true);
+		            	  }
+		            	  
+		                  break;
+		              }
+		            }
+		    	return false;
+			}
+		});
+        
+        mTopView.setOnKeyListener(new OnKeyListener() {
+			
+			@Override
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				Log.v(easyphone.EASYPHONE_TAG, "IncomingCall.onKey()");
+				
+				if(event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK)
+				{
+					// finger up event, Select current option
+	            	  int option = mMenu.getCurrentOption();
+	            	  
+	            	  if(option >= 0)
+	            	  {
+	            		  //is scanning, thus select option
+	            		  mMenu.stopScanning();
+	            		  selectOption(option);
+	            	  }
+	            	  else if(option == -1 && mMenu.isScanning())
+	            	  {
+	            		  mMenu.stopScanning();
+	            		  selectOption(0);
+	            	  }
+	            	  else
+	            	  {
+	            		//is not scanning, thus start scanning
+	            		  easyphone.callControl.silenceRinger();
+	            		  mMenu.startScanning(true);
+	            	  }
+				}
+				return false;
+			}
+		});
+        
+        wm.addView(mTopView, params);
         
         getApplicationContext().registerReceiver(receiver, new IntentFilter("android.easyphone.CLOSE_INCOMINGCALL_ACTIVITY"));
         
@@ -81,70 +184,10 @@ public class IncomingCall extends Activity{
     }
     
     @Override
-    public boolean onTouchEvent(MotionEvent event)
-    { 
-    	Log.v(easyphone.EASYPHONE_TAG, "IncomingCall.onTouchEvent()");
-    	int eventaction = event.getAction(); 
-        switch (eventaction ) { 
-              case MotionEvent.ACTION_DOWN:
-              { // touch on the screen event
-            	  break;
-              }
-              case MotionEvent.ACTION_MOVE:
-              { // move event
-                 break;
-              }
-              case MotionEvent.ACTION_UP:
-              {  // finger up event, Select current option
-            	  int option = mMenu.getCurrentOption();
-            	  
-            	  if(option >= 0)
-            	  {
-            		  //is scanning, thus select option
-            		  mMenu.stopScanning();
-            		  selectOption(option);
-            	  }
-            	  else if(option == -1 && mMenu.isScanning())
-            	  {
-            		  mMenu.stopScanning();
-            		  selectOption(0);
-            	  }
-            	  else
-            	  {
-            		//is not scanning, thus start scanning
-            		  easyphone.callControl.silenceRinger();
-            		  mMenu.startScanning(true);
-            	  }
-            	  
-                  break;
-              }
-            }
-    	return true;
-    }
-    
-    @Override
-    public void onBackPressed() 
+    public void onPause()
     {
-    	Log.v(easyphone.EASYPHONE_TAG, "easyphone.onBackPressed()");
-    	// finger up event, Select current option
-    	int option = mMenu.getCurrentOption();
-    	
-    	if(option >= 0)
-	  	{
-	  	 //is scanning, thus select option
-    		mMenu.stopScanning();
-	  		selectOption(option);
-	  	}
-	  	else if(option == -1 && mMenu.isScanning())
-	  	{
-	  		mMenu.stopScanning();
-	  		selectOption(0);
-	  	}
-	  	else
-	  	{
-	  		//is not scanning, thus start scanning
-	  		mMenu.startScanning(true);
-	  	}
+    	Log.v(easyphone.EASYPHONE_TAG, "IncomingCall.onPause()");
+    	super.onPause();
     }
     
     private void selectOption(int option)
@@ -155,6 +198,7 @@ public class IncomingCall extends Activity{
 	    	case 0:  
 	    	{
 	    		//Accept call
+	    		closeWindow();
 	    		easyphone.callControl.answerCall();
 	    		this.finish();
 	    		break;
@@ -169,6 +213,12 @@ public class IncomingCall extends Activity{
     	}
     }
     
+    private void closeWindow()
+    {
+    	WindowManager wm = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
+    	wm.removeView(mTopView);
+    }
+    
     /* USED BY CALLCONTROL */
     private BroadcastReceiver receiver = new BroadcastReceiver() {
 
@@ -179,6 +229,7 @@ public class IncomingCall extends Activity{
         	if(intent.getAction().equals("android.easyphone.CLOSE_INCOMINGCALL_ACTIVITY"))
         	{
         		getApplicationContext().unregisterReceiver(receiver);
+        		closeWindow();
         		IncomingCall.this.finish();
         	}
         }
