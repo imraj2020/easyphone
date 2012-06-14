@@ -17,19 +17,13 @@
 package android.easyphone;
 
 import java.lang.reflect.Method;
-import java.util.logging.ConsoleHandler;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Debug;
 import android.os.Handler;
-import android.preference.PreferenceManager;
-import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.widget.Toast;
 import com.android.internal.telephony.ITelephony;
 
 /**
@@ -45,7 +39,6 @@ public class CallControl extends BroadcastReceiver {
 	private ITelephony telephonyService = null;
 	
 	private boolean wasRinging = false;
-	private boolean makingCall = false;
 	private boolean wasInCall = false;
 	public boolean inCall = false;
 	
@@ -53,18 +46,17 @@ public class CallControl extends BroadcastReceiver {
 	public void onReceive(final Context context, Intent intent) {
 		Log.v(easyphone.EASYPHONE_TAG, "CallControl.onReceive()");
 		Log.v(TAG, "Call BroadCast received...");
+		
 		this.context = context;
 		Bundle b = intent.getExtras();
 		
-		TelephonyManager tm = (TelephonyManager) this.context.getSystemService(Context.TELEPHONY_SERVICE);
 		Log.v(TAG, "Phone State: "+ b.get(TelephonyManager.EXTRA_STATE));
-		
 		String state = b.getString(TelephonyManager.EXTRA_STATE);
 		
 		if(state.equalsIgnoreCase(TelephonyManager.EXTRA_STATE_RINGING))
 		{ //INCOMING CALL
 			// do this only when there is an incoming call
-			Log.v(TAG, "Incoming Call ...");
+			Log.v(easyphone.EASYPHONE_TAG, "Incoming Call ...");
 			incomingNumber = b.getString(TelephonyManager.EXTRA_INCOMING_NUMBER);
 			
 			new Handler().postDelayed(new Runnable() 
@@ -72,7 +64,7 @@ public class CallControl extends BroadcastReceiver {
 				public void run() 
 			    {
 					//launch new dialer UI
-					Log.v(TAG, "Launching new dialer activity ...");
+					Log.v(easyphone.EASYPHONE_TAG, "Launching new dialer activity ...");
 			        Intent intentIncomingCall = new Intent("android.intent.action.ANSWER");
 			        intentIncomingCall.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			        context.startActivity(intentIncomingCall);
@@ -84,14 +76,14 @@ public class CallControl extends BroadcastReceiver {
 		{ //HANG UP CALL or REJECTED CALL
 			if(wasRinging)
 			{
-				Log.v(TAG, "Call ended, BROADCASTING CLOSE_INCOMINGCALL_ACTIVITY");
+				Log.v(easyphone.EASYPHONE_TAG, "Call ended, BROADCASTING CLOSE_INCOMINGCALL_ACTIVITY");
 				Intent i = new Intent("android.easyphone.CLOSE_INCOMINGCALL_ACTIVITY");
 				context.sendBroadcast(i);
 				wasRinging = false;
 			}
 			else if(wasInCall)
 			{
-				Log.v(TAG, "Call ended, BROADCASTING CLOSE_INCALL_ACTIVITY");
+				Log.v(easyphone.EASYPHONE_TAG, "Call ended, BROADCASTING CLOSE_INCALL_ACTIVITY");
 				Intent i = new Intent("android.easyphone.CLOSE_INCALL_ACTIVITY");
 				context.sendBroadcast(i);
 				wasInCall = false;
@@ -100,18 +92,18 @@ public class CallControl extends BroadcastReceiver {
 		}
 		else if(state.equalsIgnoreCase(TelephonyManager.EXTRA_STATE_OFFHOOK))
 		{ //CALL ACCEPTED, INCALL
-			Log.v(TAG, "Call accepted...");
-			
+			Log.v(easyphone.EASYPHONE_TAG, "Call accepted...");
+	        wasRinging = false;
+	        
 			new Handler().postDelayed(new Runnable() 
 			{
 				public void run() 
-			    {
+			    {        
 					//launch new dialer UI
 					Log.v(TAG, "Launching new dialer activity ...");
 			        Intent intentInCall = new Intent(CallControl.this.context, InCall.class);
 			        intentInCall.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			        context.startActivity(intentInCall);
-			        makingCall = false;
 			        wasInCall = true;
 			    }
 			 }, 1000);
@@ -119,7 +111,6 @@ public class CallControl extends BroadcastReceiver {
 		else{
 			Log.v(TAG, "[No Call Handling]");
 			wasRinging = false;
-			makingCall = false;
 		}
 	}
 
@@ -176,9 +167,7 @@ public class CallControl extends BroadcastReceiver {
 		this.context = context;
 		try {
 			if(telephonyService == null) getTelephonyService();
-			makingCall = true;
 			telephonyService.call(number);
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 			Log.d(TAG,

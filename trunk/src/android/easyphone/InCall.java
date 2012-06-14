@@ -1,9 +1,5 @@
 package android.easyphone;
 
-import java.util.Locale;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -12,12 +8,10 @@ import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
-import android.speech.tts.TextToSpeech.OnInitListener;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.WindowManager;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class InCall extends Activity {
 	private final String TAG = this.getClass().getSimpleName();
@@ -37,7 +31,7 @@ public class InCall extends Activity {
         mMenu.setTitle((String) ((TextView)this.findViewById(R.id.TextView01)).getText());
         mMenu.addOption((String) ((TextView)this.findViewById(R.id.TextView02)).getText());
         
-        AudioManager am = (AudioManager)getApplicationContext().getSystemService(getApplicationContext().AUDIO_SERVICE);
+		AudioManager am = (AudioManager)getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
         am.setSpeakerphoneOn(true);
     }
     
@@ -45,6 +39,8 @@ public class InCall extends Activity {
     public void onStart()
     {
     	Log.v(easyphone.EASYPHONE_TAG, "ContactList.onStart()");
+    	AudioManager am = (AudioManager)getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+        am.setSpeakerphoneOn(true);
     	super.onStart();
     }
     
@@ -66,6 +62,9 @@ public class InCall extends Activity {
         WindowManager.LayoutParams lp = getWindow().getAttributes();
         lp.screenBrightness = (float) 10;
         getWindow().setAttributes(lp);
+        
+        AudioManager am = (AudioManager)getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+        am.setSpeakerphoneOn(true);
     }
     
     @Override
@@ -96,25 +95,8 @@ public class InCall extends Activity {
     public void onBackPressed() 
     {
     	Log.v(easyphone.EASYPHONE_TAG, "easyphone.onBackPressed()");
-    	// finger up event, Select current option
-    	int option = mMenu.getCurrentOption();
-    	
-    	if(option >= 0)
-	  	{
-	  	 //is scanning, thus select option
-    		mMenu.stopScanning();
-	  		selectOption(option);
-	  	}
-	  	else if(option == -1 && mMenu.isScanning())
-	  	{
-	  		mMenu.stopScanning();
-	  		selectOption(0);
-	  	}
-	  	else
-	  	{
-	  		//is not scanning, thus start scanning
-	  		mMenu.startScanning(true);
-	  	}
+    	// finger up event, END CALL
+    	selectOption(0);
     }
     
     private void selectOption(int option)
@@ -136,7 +118,7 @@ public class InCall extends Activity {
     @Override 
     public void finish()
     {
-    	AudioManager am = (AudioManager)getApplicationContext().getSystemService(getApplicationContext().AUDIO_SERVICE);
+		AudioManager am = (AudioManager)getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
         am.setSpeakerphoneOn(false);
     	super.finish();
     }

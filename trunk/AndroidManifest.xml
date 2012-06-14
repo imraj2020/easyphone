@@ -43,18 +43,19 @@
 </application>
 
 
-	<uses-sdk android:minSdkVersion="7" android:targetSdkVersion="8"></uses-sdk>
+	<uses-sdk android:minSdkVersion="8" android:targetSdkVersion="8"></uses-sdk>
 	
 	<uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
 	<uses-permission android:name="android.permission.MODIFY_PHONE_STATE"></uses-permission>
 	<uses-permission android:name="android.permission.CALL_PHONE"></uses-permission>
 	<uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"></uses-permission>
+	<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"></uses-permission>
+	<uses-permission android:name="android.permission.READ_CONTACTS"></uses-permission>
 
 	<receiver android:name=".CallControl">
 		<intent-filter android:priority="99999">
 	    	<action android:name="android.intent.action.PHONE_STATE" />
 	    </intent-filter>
 	</receiver>
-<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"></uses-permission>
-<uses-permission android:name="android.permission.READ_CONTACTS"></uses-permission>
+<uses-permission android:name="android.permission.DISABLE_KEYGUARD"></uses-permission>
 </manifest> 
