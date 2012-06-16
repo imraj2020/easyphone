@@ -1,27 +1,21 @@
 package android.easyphone;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.os.Bundle;
-import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.WindowManager;
 import android.widget.TextView;
 
-public class InCall extends Activity {
-	private final String TAG = this.getClass().getSimpleName();
-	private MenuManager mMenu = null; 
-    
+public class InCall extends EasyPhoneActivity {
+
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-    	Log.v(easyphone.EASYPHONE_TAG, "InCall.onCreate()");
-        super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState, "InCall", false);
         setContentView(R.layout.incall);
         
         getApplicationContext().registerReceiver(receiver, new IntentFilter("android.easyphone.CLOSE_INCALL_ACTIVITY"));
@@ -31,6 +25,7 @@ public class InCall extends Activity {
         mMenu.setTitle((String) ((TextView)this.findViewById(R.id.TextView01)).getText());
         mMenu.addOption((String) ((TextView)this.findViewById(R.id.TextView02)).getText());
         
+        //Turn Speaker ON
 		AudioManager am = (AudioManager)getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
         am.setSpeakerphoneOn(true);
     }
@@ -38,18 +33,11 @@ public class InCall extends Activity {
     @Override
     public void onStart()
     {
-    	Log.v(easyphone.EASYPHONE_TAG, "ContactList.onStart()");
+    	super.onStart();
+    	
+    	//Turn Speaker ON
     	AudioManager am = (AudioManager)getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
         am.setSpeakerphoneOn(true);
-    	super.onStart();
-    }
-    
-    @Override
-    public void onStop()
-    {
-    	Log.v(easyphone.EASYPHONE_TAG, "ContactList.onStop()");
-    	mMenu.stopScanning();
-    	super.onStop();
     }
     
     @Override
@@ -57,13 +45,8 @@ public class InCall extends Activity {
     {
     	super.onResume();
     	
-    	easyphone.mTTS.playEarcon("click", TextToSpeech.QUEUE_ADD, null);
-		//Screen Brightness
-        WindowManager.LayoutParams lp = getWindow().getAttributes();
-        lp.screenBrightness = (float) 10;
-        getWindow().setAttributes(lp);
-        
-        AudioManager am = (AudioManager)getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+    	//Turn Speaker ON
+    	AudioManager am = (AudioManager)getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
         am.setSpeakerphoneOn(true);
     }
     
@@ -84,7 +67,6 @@ public class InCall extends Activity {
               case MotionEvent.ACTION_UP:
               {  // finger up event, END CALL
             	  selectOption(0);
-
                   break;
               }
             }
@@ -94,20 +76,20 @@ public class InCall extends Activity {
     @Override
     public void onBackPressed() 
     {
-    	Log.v(easyphone.EASYPHONE_TAG, "easyphone.onBackPressed()");
+    	Log.v(easyphone.EASYPHONE_TAG, "InCall.onBackPressed()");
     	// finger up event, END CALL
     	selectOption(0);
     }
     
-    private void selectOption(int option)
+    @Override
+    protected void selectOption(int option)
     {
-    	Log.v(easyphone.EASYPHONE_TAG, "InCall.selectOption()");
+    	super.selectOption(option);
     	switch(option)
     	{
 	    	case 0:  
 	    	{
 	    		//End Call
-	    		easyphone.mTTS.playEarcon("back", TextToSpeech.QUEUE_FLUSH, null);
 	    		easyphone.callControl.cancelCall();
 	    		this.finish();
 	    		break;
@@ -118,6 +100,7 @@ public class InCall extends Activity {
     @Override 
     public void finish()
     {
+    	//Turn Speaker OFF
 		AudioManager am = (AudioManager)getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
         am.setSpeakerphoneOn(false);
     	super.finish();
@@ -129,7 +112,6 @@ public class InCall extends Activity {
         @Override
         public void onReceive(Context context, Intent intent) {
         	Log.v(easyphone.EASYPHONE_TAG, "InCall.onReceive()");
-        	Log.v(TAG, "Action received: " + intent.getAction());
         	if(intent.getAction().equals("android.easyphone.CLOSE_INCALL_ACTIVITY"))
         	{
         		getApplicationContext().unregisterReceiver(receiver);

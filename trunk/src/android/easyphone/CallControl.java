@@ -91,7 +91,7 @@ public class CallControl extends BroadcastReceiver {
 			inCall = false;
 		}
 		else if(state.equalsIgnoreCase(TelephonyManager.EXTRA_STATE_OFFHOOK))
-		{ //CALL ACCEPTED, INCALL
+		{ //CALL ACCEPTED OR INCALL
 			Log.v(easyphone.EASYPHONE_TAG, "Call accepted...");
 	        wasRinging = false;
 	        
