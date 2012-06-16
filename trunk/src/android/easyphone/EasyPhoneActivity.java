@@ -1,5 +1,8 @@
 package android.easyphone;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import android.app.Activity;
 import android.app.KeyguardManager;
 import android.graphics.PixelFormat;
@@ -18,6 +21,12 @@ public class EasyPhoneActivity extends Activity
 	protected String mName = "";
 	protected boolean mReadMenu = true;
 	
+	//exit variables
+	private int mMenuHits = 0;
+	private boolean mHasStarted = false;
+	private int TIME_THRESHOLD = 2000; // 1s
+	private Timer mExitTimer = null;
+	
 	/** Called when the activity is first created. */
     public void onCreate(Bundle savedInstanceState, String activityName) 
     {
@@ -28,6 +37,11 @@ public class EasyPhoneActivity extends Activity
    
     	// Initialize Scanning Menu
     	mMenu = new MenuManager();
+    	
+    	// Initialize exiting vars
+    	mMenuHits = 0;
+    	mHasStarted = false;
+    	mExitTimer = new Timer();
     }
     
     public void onCreate(Bundle savedInstanceState, String activityName, boolean readMenuOnStart) 
@@ -139,10 +153,16 @@ public class EasyPhoneActivity extends Activity
     	{
     		return super.onKeyDown(keyCode, event);
     	}
-    	else
+    	else if(keyCode == KeyEvent.KEYCODE_MENU)
     	{
-    		return true;
+    		processMenuKey();
     	}
+    	else if(keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_UP)
+    	{
+    		return false;
+    	}
+    	
+    	return true;
     }
     
     @Override
@@ -165,5 +185,27 @@ public class EasyPhoneActivity extends Activity
     {
     	Log.v(EASYPHONE_TAG, mName + ".selectOption()");
     	easyphone.mTTS.playEarcon("click", TextToSpeech.QUEUE_FLUSH, null);
+    }
+    
+    private void processMenuKey()
+    {
+    	mMenuHits++;
+    	if(!mHasStarted)
+    	{ // start new timer
+    		mHasStarted = true;
+    		mExitTimer.schedule(new TimerTask() {
+				
+				@Override
+				public void run() 
+				{
+					mHasStarted = false;
+					mMenuHits = 1;
+				}
+			}, TIME_THRESHOLD);
+    	}
+    	if(mMenuHits >= 4)
+    	{ // 4 consecutive hits, exit app
+    		System.exit(RESULT_OK);
+    	}
     }
 }
