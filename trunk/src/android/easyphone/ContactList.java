@@ -1,11 +1,17 @@
 package android.easyphone;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
+import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.WindowManager;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class ContactList extends Activity {
@@ -22,10 +28,18 @@ public class ContactList extends Activity {
         //Get UI Elements
         mMenu = new MenuManager();
         mMenu.setTitle((String) ((TextView)this.findViewById(R.id.TextView01)).getText());
-        mMenu.addOption((String) ((TextView)this.findViewById(R.id.TextView02)).getText());
-        mMenu.addOption((String) ((TextView)this.findViewById(R.id.TextView03)).getText());
-        mMenu.addOption((String) ((TextView)this.findViewById(R.id.TextView04)).getText());
-        mMenu.addOption((String) ((TextView)this.findViewById(R.id.TextView05)).getText());
+        ArrayList<Pair<String, String>>contactsList = Utils.getContactsList();
+        
+        for(int i=0; i<contactsList.size(); i++)
+        { 
+	        TextView tv = new TextView(getApplicationContext());
+			tv.setId(i);
+			tv.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+			tv.setText((i+1) + ", " + contactsList.get(i).first);
+			LinearLayout layout = (LinearLayout) this.findViewById(R.id.LinearLayoutId01);
+			layout.addView(tv);
+			mMenu.addOption((String) ((TextView)this.findViewById(i)).getText());
+        }
     }
     
     @Override
@@ -128,29 +142,20 @@ public class ContactList extends Activity {
     {
     	Log.v(easyphone.EASYPHONE_TAG, "ContactList.selectOption()");
     	Log.v(TAG, "Contact selected: " + option);
-    	switch(option)
+    	/*
+    	 easyphone.callControl.makeCall(Utils.getContactsList()[option-1], getApplicationContext());
+    	  
+    	 */
+    	
+    	if(option==Utils.getContactsList().size()-1)
     	{
-	    	case 0:  
-	    	{
-	    		easyphone.callControl.makeCall("919205537", getApplicationContext());
-	    		break;
-	    	}
-	    	case 1:
-	    	{
-	    		easyphone.callControl.makeCall("965360737", getApplicationContext());
-	    		break;
-	    	}
-	    	case 2:
-	    	{
-	    		easyphone.callControl.makeCall("916280481", getApplicationContext());
-	    		break;
-	    	}
-	    	case 3:
-	    	{
-	    		this.finish();
-	    		break;
-	    	}
+    		this.finish();
     	}
+    	else
+    	{
+    		easyphone.callControl.makeCall(Utils.getContactsList().get(option).second, getApplicationContext());
+    	}
+
     }
 
 }

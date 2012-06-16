@@ -3,6 +3,7 @@ package android.easyphone;
 import java.util.Locale;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -10,8 +11,12 @@ import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 import android.text.format.Time;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +43,10 @@ public class easyphone extends Activity implements OnInitListener{
         Intent checkIntent = new Intent();
         checkIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
         startActivityForResult(checkIntent, MY_DATA_CHECK_CODE); //wait for activity result
+        
+        //Get Contacts from Phone Contact List
+        //LayoutInflater inflater = this.getLayoutInflater();
+        Utils.getAllContacts(getApplicationContext());
         
         //Get UI Elements
         mMenu = new MenuManager();
