@@ -1,6 +1,9 @@
 package android.easyphone;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -42,18 +45,29 @@ public class Utils {
 	public static void getAllContacts(Context context)
 	{		
 		Cursor people = context.getContentResolver().query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
+		
+		//Iterate all contacts
 		while(people.moveToNext()) {
-			String contactId = people.getString(people.getColumnIndex( ContactsContract.Contacts._ID)); 
+			
+		   //Get the contactId and name
+		   String contactId = people.getString(people.getColumnIndex( ContactsContract.Contacts._ID)); 
 		   int nameFieldColumnIndex = people.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME);
 		   String contact = people.getString(nameFieldColumnIndex);
 		  
-		      // You know it has a number so now query it like this
+		      // Exception to avoid strange cases. Example: contact without any phone number
 		   try
 		   {
+			   
+			  // Get all phone numbers 
 			  Cursor phones = context.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID +" = "+ contactId, null, null); 
-		      while (phones.moveToNext()) {
-		    	  
+		      
+			  //Iterate the phone numbers
+			  while (phones.moveToNext()) {
+		    	 
+				 //Get Number
 		         String phoneNumber = phones.getString(phones.getColumnIndex( ContactsContract.CommonDataKinds.Phone.NUMBER));
+		         
+		         //If the contact has more than one phone number, detail the type of number (mobile, work or home);
 		         String phoneType="";
 		         if (phones.getCount()>1)
 		         {
@@ -67,12 +81,16 @@ public class Utils {
 		   catch(Exception e){
 			   continue;
 		   }
-
 		}
+		
+		//Sort the contacts list
+		Collections.sort(contactsList, new pairComparator());
+		
 		contactsList.add(new Pair<String, String>("Voltar atrás", ""));
 		people.close();
 	}
 	
+	//Function to return a string with the type of phone number
 	private static String getPhoneNumberType(int type)
 	{
 		String s;
@@ -130,4 +148,10 @@ public class Utils {
         }
     };
 
+    public static class pairComparator implements Comparator<Pair<String, String>> {
+	    public int compare(Pair<String, String> name1, Pair <String, String> name2) {
+	        return name1.first.compareTo(name2.first);
+	    }
+	}
+    
 }
