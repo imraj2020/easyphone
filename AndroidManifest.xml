@@ -30,13 +30,18 @@
 		<activity android:name=".InCall" 
 					android:screenOrientation="portrait"
 					android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
-		<intent-filter>
+			<intent-filter>
 		        <action android:name="android.easyphone.CLOSE_INCALL_ACTIVITY" />
 		        <action android:name="android.easyphone.action.INCALL" />
 		    </intent-filter>
 		</activity>
 		
 		<activity android:name=".ContactList" 
+					android:screenOrientation="portrait"
+					android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+		</activity>
+		
+		<activity android:name=".EasyPhoneActivity" 
 					android:screenOrientation="portrait"
 					android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
 		</activity>

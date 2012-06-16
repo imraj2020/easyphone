@@ -1,9 +1,6 @@
 package android.easyphone;
 
 import java.util.Locale;
-
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -11,29 +8,19 @@ import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 import android.text.format.Time;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class easyphone extends Activity implements OnInitListener{
-	static public String EASYPHONE_TAG = "EasyPhone";
+public class easyphone extends EasyPhoneActivity implements OnInitListener{
 	static public CallControl callControl = null;
-	private final String TAG = this.getClass().getSimpleName();
 	static public TextToSpeech mTTS = null;
     private int MY_DATA_CHECK_CODE;
     private boolean mttsloaded = false;
-    private MenuManager mMenu = null;
     
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-    	Log.v(EASYPHONE_TAG, "easyphone.onCreate()");
-        super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState, "EasyPhone");
         setContentView(R.layout.main);
         
         //Register CallControl
@@ -43,13 +30,11 @@ public class easyphone extends Activity implements OnInitListener{
         Intent checkIntent = new Intent();
         checkIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
         startActivityForResult(checkIntent, MY_DATA_CHECK_CODE); //wait for activity result
-        
+       
         //Get Contacts from Phone Contact List
-        //LayoutInflater inflater = this.getLayoutInflater();
         Utils.getAllContacts(getApplicationContext());
-        
-        //Get UI Elements
-        mMenu = new MenuManager();
+
+		//Set Menu Options
         mMenu.setTitle((String) ((TextView)this.findViewById(R.id.TextView01)).getText());
         mMenu.addOption((String) ((TextView)this.findViewById(R.id.TextView02)).getText());
         mMenu.addOption((String) ((TextView)this.findViewById(R.id.TextView03)).getText());
@@ -59,119 +44,15 @@ public class easyphone extends Activity implements OnInitListener{
         Utils.registerBatteryListener(getApplicationContext());
     }
     
-    @Override
-    public void onStart()
+    protected void selectOption(int option)
     {
-    	Log.v(EASYPHONE_TAG, "easyphone.onStart()");
-    	super.onStart();
+    	super.selectOption(option);
     	
-    	mMenu.startScanning(true);
-    }
-    
-    @Override
-    public void onStop()
-    {
-    	Log.v(EASYPHONE_TAG, "easyphone.onStop()");
-    	mMenu.stopScanning();
-    	super.onStop();
-    }
-    
-    @Override
-    public void onDestroy()
-    {
-    	Utils.unregisterBatteryListener(getApplicationContext());
-    	super.onDestroy();
-    }
-    
-    @Override
-    public void onResume()
-    {
-    	super.onResume();
-    	
-    	if(mTTS != null)
-    		easyphone.mTTS.playEarcon("click", TextToSpeech.QUEUE_ADD, null);
-    	
-		//Screen Brightness
-        WindowManager.LayoutParams lp = getWindow().getAttributes();
-        lp.screenBrightness = (float) 10;
-        getWindow().setAttributes(lp);
-    }
-    
-    @Override
-    public boolean onTouchEvent(MotionEvent event)
-    { 
-    	Log.v(EASYPHONE_TAG, "easyphone.onTouchEvent()");
-    	int eventaction = event.getAction(); 
-        switch (eventaction ) { 
-              case MotionEvent.ACTION_DOWN:
-              { // touch on the screen event
-            	  break;
-              }
-              case MotionEvent.ACTION_MOVE:
-              { // move event
-                 break;
-              }
-              case MotionEvent.ACTION_UP:
-              {  // finger up event, Select current option
-            	  int option = mMenu.getCurrentOption();
-            	  
-            	  if(option >= 0)
-            	  {
-            		  //is scanning, thus select option
-            		  mMenu.stopScanning();
-            		  selectOption(option);
-            	  }
-            	  else if(option == -1 && mMenu.isScanning())
-            	  {
-            		  mMenu.stopScanning();
-            		  selectOption(0);
-            	  }
-            	  else
-            	  {
-            		//is not scanning, thus start scanning
-            		  mMenu.startScanning(true);
-            	  }
-            	  
-                  break;
-              }
-            }
-    	return true;
-    }
-    
-    @Override
-    public void onBackPressed() 
-    {
-    	Log.v(EASYPHONE_TAG, "easyphone.onBackPressed()");
-    	// finger up event, Select current option
-    	int option = mMenu.getCurrentOption();
-    	
-    	if(option >= 0)
-	  	{
-	  	 //is scanning, thus select option
-    		mMenu.stopScanning();
-	  		selectOption(option);
-	  	}
-	  	else if(option == -1 && mMenu.isScanning())
-	  	{
-	  		mMenu.stopScanning();
-	  		selectOption(0);
-	  	}
-	  	else
-	  	{
-	  		//is not scanning, thus start scanning
-	  		mMenu.startScanning(true);
-	  	}
-    }
-    
-    private void selectOption(int option)
-    {
-    	Log.v(EASYPHONE_TAG, "easyphone.selectOption()");
     	switch(option)
     	{
 	    	case 0:  //Make call
 	    	{
 	    		Log.v(EASYPHONE_TAG, "make call");
-	    		mTTS.playEarcon("click", TextToSpeech.QUEUE_FLUSH, null);
 	    		//Call
 	    		Intent contactList =  new Intent(getApplicationContext(), ContactList.class);
 	    		startActivity(contactList);
@@ -180,22 +61,28 @@ public class easyphone extends Activity implements OnInitListener{
 	    	case 1: //Clock
 	    	{
 	    		Log.v(EASYPHONE_TAG, "clock");
-	    		mTTS.playEarcon("click", TextToSpeech.QUEUE_FLUSH, null);
 	    		Time now = new Time();
 	    		now.setToNow();
 	    		int hour = now.hour;
 	    		int minute = now.minute;
-	    		mTTS.speak("São " + hour + "horas e " + minute + "minutos", TextToSpeech.QUEUE_ADD, null);
+	    		easyphone.mTTS.speak("São " + hour + "horas e " + minute + "minutos", TextToSpeech.QUEUE_ADD, null);
 	    		break;
 	    	}
 	    	case 2: //Battery
 	    	{
 	    		Log.v(EASYPHONE_TAG, "battery");
-	    		mTTS.speak(String.valueOf(Utils.getBatteryLevel()) + " porcento", TextToSpeech.QUEUE_ADD, null);
+	    		easyphone.mTTS.speak(String.valueOf(Utils.getBatteryLevel()) + " porcento", TextToSpeech.QUEUE_ADD, null);
 	    		break;
 	    	}
     	}
-    }    
+    }
+    
+    @Override
+    public void onDestroy()
+    {
+    	Utils.unregisterBatteryListener(getApplicationContext());
+    	super.onDestroy();
+    }
     
     /** Called when TTS reply arrive. */
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -245,10 +132,10 @@ public class easyphone extends Activity implements OnInitListener{
 			// Receiver is already registered
 			return;
 		}
-		Log.i(TAG, "Register Receiver.........");
+		Log.i(EASYPHONE_TAG, "Register Receiver.........");
 		IntentFilter inf = new IntentFilter("android.intent.action.PHONE_STATE");
 		
-		Log.i(TAG, "Call Receiver instance_New_________");
+		Log.i(EASYPHONE_TAG, "Call Receiver instance_New_________");
 		callControl = new CallControl();
 		getApplicationContext().registerReceiver(callControl, inf, "android.permission.READ_PHONE_STATE", null);
 	}

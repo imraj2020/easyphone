@@ -1,41 +1,29 @@
 package android.easyphone;
 
-import android.app.Activity;
-import android.app.KeyguardManager;
-import android.app.KeyguardManager.KeyguardLock;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
-import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
 import android.view.View.OnTouchListener;
-import android.view.Window.Callback;
-import android.view.WindowManager.LayoutParams;
-import android.view.accessibility.AccessibilityEvent;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-public class IncomingCall extends Activity{
-	private final String TAG = "IncomingCall";
-	private MenuManager mMenu = null;
+public class IncomingCall extends EasyPhoneActivity{
+
 	ViewGroup mTopView = null;
     
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-    	Log.v(easyphone.EASYPHONE_TAG, "IncomingCall.onCreate()");
-        super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState, "IncomingCall", false);
         
         setContentView(R.layout.incomingcall);
         
@@ -55,7 +43,7 @@ public class IncomingCall extends Activity{
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				Log.v(easyphone.EASYPHONE_TAG, "IncomingCall.onTouchEvent()");
-		    	
+				
 				int eventaction = event.getAction(); 
 		    	
 		        switch (eventaction ) { 
@@ -133,7 +121,7 @@ public class IncomingCall extends Activity{
         
         getApplicationContext().registerReceiver(receiver, new IntentFilter("android.easyphone.CLOSE_INCOMINGCALL_ACTIVITY"));
         
-        //Get UI Elements
+        //Set Menu Options
         String incomingNumber = easyphone.callControl.getIncomingNumber();
         String name = null;
         if(incomingNumber == null)
@@ -160,39 +148,12 @@ public class IncomingCall extends Activity{
         mMenu.setTitle((String) ((TextView)this.findViewById(R.id.TextView01)).getText());
         mMenu.addOption((String) ((TextView)this.findViewById(R.id.TextView02)).getText());
         mMenu.addOption((String) ((TextView)this.findViewById(R.id.TextView03)).getText());
-    }
+    }    
     
     @Override
-    public void onStop()
+    protected void selectOption(int option)
     {
-    	Log.v(easyphone.EASYPHONE_TAG, "ContactList.onStop()");
-    	mMenu.stopScanning();
-    	super.onStop();
-    }
-    
-    @Override
-    public void onResume()
-    {
-    	super.onResume();
-    	
-    	easyphone.mTTS.playEarcon("click", TextToSpeech.QUEUE_FLUSH, null);
-    	
-		//Screen Brightness
-        WindowManager.LayoutParams lp = getWindow().getAttributes();
-        lp.screenBrightness = (float) 10;
-        getWindow().setAttributes(lp);
-    }
-    
-    @Override
-    public void onPause()
-    {
-    	Log.v(easyphone.EASYPHONE_TAG, "IncomingCall.onPause()");
-    	super.onPause();
-    }
-    
-    private void selectOption(int option)
-    {
-    	Log.v(easyphone.EASYPHONE_TAG, "IncomingCall.selectOption()");
+    	super.selectOption(option);
     	switch(option)
     	{
 	    	case 0:  
@@ -215,8 +176,18 @@ public class IncomingCall extends Activity{
     
     private void closeWindow()
     {
-    	WindowManager wm = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
-    	wm.removeView(mTopView);
+    	Log.v(easyphone.EASYPHONE_TAG, "IncomingCall.closeWindow()");
+    	try
+    	{
+	    	WindowManager wm = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
+	    	wm.removeView(mTopView);
+    	}
+    	catch(Exception e)
+    	{
+    		Log.v(easyphone.EASYPHONE_TAG, "IncomingCall.closeWindow() - EXCEPTION");
+    		return;
+    	}
+    	
     }
     
     /* USED BY CALLCONTROL */
@@ -225,7 +196,6 @@ public class IncomingCall extends Activity{
         @Override
         public void onReceive(Context context, Intent intent) {
         	Log.v(easyphone.EASYPHONE_TAG, "IncomingCall.onReceive()");
-        	Log.v(TAG, "Action received: " + intent.getAction());
         	if(intent.getAction().equals("android.easyphone.CLOSE_INCOMINGCALL_ACTIVITY"))
         	{
         		getApplicationContext().unregisterReceiver(receiver);

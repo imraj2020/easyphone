@@ -46,7 +46,7 @@ public class MenuManager {
 		mTitle = title;
 	}
 	
-	public void startScanning(boolean readMenu)
+	public void startScanning(boolean readTitle)
 	{
 		Log.v(easyphone.EASYPHONE_TAG, "MenuManager.startScanning()");
 		
@@ -55,7 +55,7 @@ public class MenuManager {
 		mIsScanning = true;
 		
 		//READ TITLE
-	    if(readMenu) readTitle();
+	    if(readTitle) readTitle();
 	    	
 	    //READ OPTIONS
 	    scanOptions();
