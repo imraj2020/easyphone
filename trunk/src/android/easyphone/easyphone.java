@@ -1,8 +1,14 @@
 package android.easyphone;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Locale;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
@@ -22,6 +28,9 @@ public class easyphone extends EasyPhoneActivity implements OnInitListener{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState, "EasyPhone");
         setContentView(R.layout.main);
+        
+        // Copy files on assets folder to ./sdcard
+        CopyAssets();
         
         //Register CallControl
         registerCallReceiver();
@@ -111,13 +120,11 @@ public class easyphone extends EasyPhoneActivity implements OnInitListener{
     	{
     		Locale locale = Locale.getDefault();
     		mTTS.setLanguage(locale);
-    		mTTS.addEarcon("click", "/sdcard/click.wav");
-    		//tts.addEarcon("error", "/sdcard/error.wav");
-    		mTTS.addEarcon("back", "/sdcard/invert.wav");
+    		mTTS.addEarcon("click", "/sdcard/EasyPhone/click.wav");
+    		mTTS.addEarcon("back", "/sdcard/EasyPhone/invert.wav");
+    		mTTS.addEarcon("startup", "/sdcard/EasyPhone/startup.wav");
     		
-    		//first time read title and options
-    		//readTitle();
-    		//scanOptions();
+    		mTTS.playEarcon("startup", mTTS.QUEUE_FLUSH, null);
     	}
     	else //ERROR
     	{
@@ -139,4 +146,43 @@ public class easyphone extends EasyPhoneActivity implements OnInitListener{
 		callControl = new CallControl();
 		getApplicationContext().registerReceiver(callControl, inf, "android.permission.READ_PHONE_STATE", null);
 	}
+    
+    private void CopyAssets() {
+        AssetManager assetManager = getAssets();
+        String[] files = null;
+        try {
+            files = assetManager.list("");
+        } catch (IOException e) {
+            Log.e("tag", e.getMessage());
+        }
+        
+        // Create new directory
+        File dir = new File("/sdcard/EasyPhone");
+        if (!dir.exists())
+            dir.mkdir();
+        
+        for(String filename : files) {
+            InputStream in = null;
+            OutputStream out = null;
+            try {
+              in = assetManager.open(filename);
+              out = new FileOutputStream("/sdcard/EasyPhone/" + filename);
+              copyFile(in, out);
+              in.close();
+              in = null;
+              out.flush();
+              out.close();
+              out = null;
+            } catch(Exception e) {
+                Log.v(EASYPHONE_TAG, e.getMessage());
+            }       
+        }
+    }
+    private void copyFile(InputStream in, OutputStream out) throws IOException {
+        byte[] buffer = new byte[1024];
+        int read;
+        while((read = in.read(buffer)) != -1){
+          out.write(buffer, 0, read);
+        }
+    }
 }
