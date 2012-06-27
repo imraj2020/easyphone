@@ -11,7 +11,7 @@ public class ContactList extends EasyPhoneActivity {
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState, "ContactList");
+        super.onCreate(savedInstanceState, "ContactList", R.layout.contactlist);
         setContentView(R.layout.contactlist);
         
         //Set Menu Options

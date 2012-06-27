@@ -15,7 +15,7 @@ public class InCall extends EasyPhoneActivity {
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState, "InCall", false);
+        super.onCreate(savedInstanceState, "InCall", R.layout.incall, false);
         setContentView(R.layout.incall);
         
         getApplicationContext().registerReceiver(receiver, new IntentFilter("android.easyphone.CLOSE_INCALL_ACTIVITY"));

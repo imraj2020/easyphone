@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Locale;
+
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.AssetManager;
@@ -14,6 +16,7 @@ import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 import android.text.format.Time;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,11 +25,12 @@ public class easyphone extends EasyPhoneActivity implements OnInitListener{
 	static public TextToSpeech mTTS = null;
     private int MY_DATA_CHECK_CODE;
     private boolean mttsloaded = false;
+    private boolean startedSound = false;
     
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState, "EasyPhone");
+        super.onCreate(savedInstanceState, "EasyPhone", R.layout.main);        
         setContentView(R.layout.main);
         
         // Copy files on assets folder to ./sdcard
@@ -41,7 +45,7 @@ public class easyphone extends EasyPhoneActivity implements OnInitListener{
         startActivityForResult(checkIntent, MY_DATA_CHECK_CODE); //wait for activity result
        
         //Get Contacts from Phone Contact List
-       // Utils.getAllContacts(getApplicationContext());
+        Utils.getAllContacts(getApplicationContext());
 
 		//Set Menu Options
         mMenu.setTitle((String) ((TextView)this.findViewById(R.id.TextView01)).getText());
@@ -124,7 +128,8 @@ public class easyphone extends EasyPhoneActivity implements OnInitListener{
     		mTTS.addEarcon("back", "/sdcard/EasyPhone/invert.wav");
     		mTTS.addEarcon("startup", "/sdcard/EasyPhone/startup.wav");
     		
-    		mTTS.playEarcon("startup", mTTS.QUEUE_FLUSH, null);
+    		if(!startedSound) mTTS.playEarcon("startup", mTTS.QUEUE_FLUSH, null);
+    		startedSound = true;
     	}
     	else //ERROR
     	{
