@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 public class InCall extends EasyPhoneActivity {
 
+	private AudioManager mAudioManager = null;
+	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -26,8 +28,15 @@ public class InCall extends EasyPhoneActivity {
         mMenu.addOption((String) ((TextView)this.findViewById(R.id.TextView02)).getText());
         
         //Turn Speaker ON
-		AudioManager am = (AudioManager)getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
-        am.setSpeakerphoneOn(true);
+		mAudioManager = (AudioManager)getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+		
+		Log.v(EASYPHONE_TAG, "isBluetoothScoOn: " + mAudioManager.isBluetoothScoOn());
+		
+		if(!mAudioManager.isBluetoothScoOn())
+		{
+			mAudioManager.setSpeakerphoneOn(true);
+		}
+		
     }
     
     @Override
@@ -36,8 +45,9 @@ public class InCall extends EasyPhoneActivity {
     	super.onStart();
     	
     	//Turn Speaker ON
-    	AudioManager am = (AudioManager)getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
-        am.setSpeakerphoneOn(true);
+    	/*Log.v(EASYPHONE_TAG, "isBluetoothScoOn: " + mAudioManager.isBluetoothScoOn());
+    	if(!mAudioManager.isBluetoothScoOn()) mAudioManager.setSpeakerphoneOn(true);
+    	else mAudioManager.setSpeakerphoneOn(false);*/
     }
     
     @Override
@@ -46,8 +56,11 @@ public class InCall extends EasyPhoneActivity {
     	super.onResume();
     	
     	//Turn Speaker ON
-    	AudioManager am = (AudioManager)getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
-        am.setSpeakerphoneOn(true);
+    	/*Log.v(EASYPHONE_TAG, "isBluetoothScoOn: " + mAudioManager.isBluetoothScoOn());
+    	if(!mAudioManager.isBluetoothScoOn()) 
+    		mAudioManager.setSpeakerphoneOn(true);
+    	else
+    		mAudioManager.setSpeakerphoneOn(false);*/
     }
     
     @Override
@@ -101,8 +114,10 @@ public class InCall extends EasyPhoneActivity {
     public void finish()
     {
     	//Turn Speaker OFF
-		AudioManager am = (AudioManager)getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
-        am.setSpeakerphoneOn(false);
+		if(mAudioManager.isSpeakerphoneOn())
+		{
+			mAudioManager.setSpeakerphoneOn(false);
+		}
     	super.finish();
     }
     
