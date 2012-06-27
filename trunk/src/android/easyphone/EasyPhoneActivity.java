@@ -7,6 +7,7 @@ import android.app.KeyguardManager;
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -56,7 +57,7 @@ public class EasyPhoneActivity extends Activity
         		WindowManager.LayoutParams.FLAG_FULLSCREEN, 
         		WindowManager.LayoutParams.FLAG_FULLSCREEN,                 
         		WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,               
-        		WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
+        		WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH | WindowManager.LayoutParams.FLAG_TOUCHABLE_WHEN_WAKING,
         		PixelFormat.OPAQUE);
         mWindowManager = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);    
        
@@ -91,7 +92,10 @@ public class EasyPhoneActivity extends Activity
     public void onStop()
     {
     	Log.v(EASYPHONE_TAG, mName + ".onStop()");
+    	
+    	// stop menu reading
     	mMenu.stopScanning();
+    	
     	super.onStop();
     }
     
@@ -129,6 +133,7 @@ public class EasyPhoneActivity extends Activity
     public boolean onTouchEvent(MotionEvent event)
     { 
     	Log.v(EASYPHONE_TAG, mName + ".onTouchEvent()");
+    	
     	int eventaction = event.getAction(); 
         switch (eventaction ) { 
               case MotionEvent.ACTION_DOWN:
@@ -169,7 +174,9 @@ public class EasyPhoneActivity extends Activity
     @Override
     public void onBackPressed() 
     {
-    	Log.v(EASYPHONE_TAG, mName + ".onBackPressed()");
+    	// Comment if you don't want to deal with back button 
+    	/*Log.v(EASYPHONE_TAG, mName + ".onBackPressed()");
+
     	// finger up event, Select current option
     	int option = mMenu.getCurrentOption();
     	
@@ -188,7 +195,7 @@ public class EasyPhoneActivity extends Activity
 	  	{
 	  		//is not scanning, thus start scanning
 	  		mMenu.startScanning(true);
-	  	}
+	  	}*/
     }
     
     @Override 
@@ -214,15 +221,13 @@ public class EasyPhoneActivity extends Activity
     @Override
     public void onAttachedToWindow() 
     {
-    	/*Log.v(EASYPHONE_TAG, mName + ".onAttachedToWindow()");
+    	Log.v(EASYPHONE_TAG, mName + ".onAttachedToWindow()");
     	
     	// Disable Power Button
     	KeyguardManager keyguardManager = (KeyguardManager) getSystemService(Activity.KEYGUARD_SERVICE);
         KeyguardManager.KeyguardLock lock = keyguardManager.newKeyguardLock(KEYGUARD_SERVICE);
         lock.disableKeyguard();
         
-    	// Disable Home Button
-        //this.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);*/
         super.onAttachedToWindow();
     }
     
@@ -298,6 +303,8 @@ public class EasyPhoneActivity extends Activity
     	}
     	if(mMenuHits >= 4)
     	{ // 4 consecutive hits, exit app
+    		if(easyphone.mTTS != null) easyphone.mTTS.playEarcon("exit", easyphone.mTTS.QUEUE_FLUSH, null);
+    		while(easyphone.mTTS != null && easyphone.mTTS.isSpeaking());
     		System.exit(RESULT_OK);
     	}
     }
