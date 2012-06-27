@@ -4,7 +4,6 @@
   android:orientation="vertical"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent"
-  android:keepScreenOn="true"
   android:id="@+id/LinearLayoutId01">
 
 <TextView android:textStyle="bold" android:id="@+id/TextView01" android:textColor="#dddddd" android:typeface="sans" android:layout_height="wrap_content" android:layout_width="fill_parent" android:text="Lista Contactos" android:textSize="25sp" />

@@ -46,7 +46,7 @@ public class easyphone extends EasyPhoneActivity implements OnInitListener{
         startActivityForResult(checkIntent, MY_DATA_CHECK_CODE); //wait for activity result
        
         //Get Contacts from Phone Contact List
-        Utils.getAllContacts(getApplicationContext());
+        //Utils.getAllContacts(getApplicationContext());
 
 		//Set Menu Options
         mMenu.setTitle((String) ((TextView)this.findViewById(R.id.TextView01)).getText());
@@ -56,6 +56,9 @@ public class easyphone extends EasyPhoneActivity implements OnInitListener{
         
         //Battery
         Utils.registerBatteryListener(getApplicationContext());
+        
+        // Screen state receiver
+        Utils.registerScreenStateListener(getApplicationContext());
     }
     
     protected void selectOption(int option)
@@ -94,7 +97,12 @@ public class easyphone extends EasyPhoneActivity implements OnInitListener{
     @Override
     public void onDestroy()
     {
+    	// unregister battery listener
     	Utils.unregisterBatteryListener(getApplicationContext());
+    	
+    	//unregister screen state listener
+    	Utils.unregisterScreenStateListener(getApplicationContext());
+    	
     	super.onDestroy();
     }
     
@@ -128,6 +136,9 @@ public class easyphone extends EasyPhoneActivity implements OnInitListener{
     		mTTS.addEarcon("click", "/sdcard/EasyPhone/click.wav");
     		mTTS.addEarcon("back", "/sdcard/EasyPhone/invert.wav");
     		mTTS.addEarcon("startup", "/sdcard/EasyPhone/startup.wav");
+    		mTTS.addEarcon("screenon", "/sdcard/EasyPhone/screenon.wav");
+    		mTTS.addEarcon("screenoff", "/sdcard/EasyPhone/screenoff.wav");
+    		mTTS.addEarcon("exit", "/sdcard/EasyPhone/exit.wav");
     		
     		if(!startedSound) mTTS.playEarcon("startup", mTTS.QUEUE_FLUSH, null);
     		startedSound = true;

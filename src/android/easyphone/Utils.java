@@ -3,6 +3,7 @@ package android.easyphone;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Timer;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -18,7 +19,12 @@ import android.util.Pair;
 
 public class Utils {	
 	
+	// Battery receiver
 	private static PowerConnectionManager mBatteryReceiver = null;
+
+	// Screen state receiver
+	private static ScreenReceiver mScreenStateReceiver = null;
+	
 	// Contact list vars
 	private static ArrayList<Pair<String, String>> contactsList = new ArrayList<Pair<String, String>>();
 	
@@ -147,4 +153,17 @@ public class Utils {
 		return mBatteryReceiver.getBatteryLevel();
 	}
 	
+	/* Screen State Listener*/
+	public static void registerScreenStateListener(Context context)
+	{
+		IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
+        mScreenStateReceiver = new ScreenReceiver();
+        context.registerReceiver(mScreenStateReceiver, filter);
+	}
+	
+	public static void unregisterScreenStateListener(Context context)
+	{
+		context.unregisterReceiver(mScreenStateReceiver);
+	}	
 }
