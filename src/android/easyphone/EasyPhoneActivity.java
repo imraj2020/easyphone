@@ -175,8 +175,15 @@ public class EasyPhoneActivity extends Activity
         KeyguardManager.KeyguardLock lock = keyguardManager.newKeyguardLock(KEYGUARD_SERVICE);
         lock.disableKeyguard();
         
-    	// Disable Home Button        
+    	// Disable Home Button
         this.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+       /* WindowManager.LayoutParams params = new WindowManager.LayoutParams( 
+        		WindowManager.LayoutParams.FLAG_FULLSCREEN, 
+        		WindowManager.LayoutParams.FLAG_FULLSCREEN,                 
+        		WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,               
+        		WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
+        		PixelFormat.OPAQUE);
+        getWindow().setAttributes(params);*/
         
         super.onAttachedToWindow();
     }
