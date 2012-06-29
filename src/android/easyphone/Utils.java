@@ -16,6 +16,7 @@ import android.provider.ContactsContract;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.util.Pair;
+import android.view.MotionEvent;
 
 public class Utils {	
 	
@@ -28,7 +29,44 @@ public class Utils {
 	// Contact list vars
 	private static ArrayList<Pair<String, String>> contactsList = new ArrayList<Pair<String, String>>();
 	
+	// Bounce vars
+	private static int mBounceThreshold = 1000; //1 second
+	private static long mLastTimeStamp = Long.MIN_VALUE;
 	
+	/***/
+	
+	//check if event is valid
+	public static boolean isEventValid(MotionEvent event)
+	{
+		boolean result = true;
+		long timestamp = event.getEventTime();
+		
+		Log.v(easyphone.EASYPHONE_TAG, "Utils.isEventValid() time: " + timestamp);
+		
+		if(mLastTimeStamp != Long.MIN_VALUE)
+		{
+			long diff = timestamp - mLastTimeStamp;
+			if(diff < mBounceThreshold)
+			{
+				// invalid
+				result = false;
+			}
+			else
+			{
+				// valid
+				mLastTimeStamp = timestamp;
+			}
+		}
+		else
+		{
+			// first touch
+			mLastTimeStamp = timestamp;
+		}
+		
+		return result;
+	}
+	
+	// get contact name from phonenumber
 	public static String getContactName(Context context, String number)
 	{
 		Log.v(easyphone.EASYPHONE_TAG, "Utils.getContactName()");

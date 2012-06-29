@@ -32,7 +32,7 @@ public class InCall extends EasyPhoneActivity {
 		
 		Log.v(EASYPHONE_TAG, "isBluetoothScoOn: " + mAudioManager.isBluetoothScoOn());
 		
-		if(!mAudioManager.isBluetoothScoOn())
+		if(!mAudioManager.isBluetoothScoOn() && !mAudioManager.isWiredHeadsetOn())
 		{
 			mAudioManager.setSpeakerphoneOn(true);
 		}
@@ -78,7 +78,11 @@ public class InCall extends EasyPhoneActivity {
                  break;
               }
               case MotionEvent.ACTION_UP:
-              {  // finger up event, END CALL
+              {  
+            	// check if it is a bounce
+            	  if(!Utils.isEventValid(event)) break;
+            	  
+            	  // finger up event, END CALL
             	  selectOption(0);
                   break;
               }
@@ -114,10 +118,7 @@ public class InCall extends EasyPhoneActivity {
     public void finish()
     {
     	//Turn Speaker OFF
-		if(mAudioManager.isSpeakerphoneOn())
-		{
-			mAudioManager.setSpeakerphoneOn(false);
-		}
+		mAudioManager.setSpeakerphoneOn(false);
     	super.finish();
     }
     
