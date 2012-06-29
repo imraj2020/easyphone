@@ -71,10 +71,10 @@ public class IncomingCall extends EasyPhoneActivity{
     @Override
     public void onBackPressed() 
     {
-    	if(!mMenu.isScanning())
+    	/*if(!mMenu.isScanning())
     	{
     		easyphone.callControl.silenceRinger();
-    	}
+    	}*/
     	super.onBackPressed();
     }
     
