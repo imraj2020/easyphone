@@ -145,7 +145,11 @@ public class EasyPhoneActivity extends Activity
                  break;
               }
               case MotionEvent.ACTION_UP:
-              {  // finger up event, Select current option
+              {  
+            	  // check if it is a bounce
+            	  if(!Utils.isEventValid(event)) break;
+            	  
+            	  // finger up event, Select current option
             	  int option = mMenu.getCurrentOption();
             	  
             	  if(option >= 0)
