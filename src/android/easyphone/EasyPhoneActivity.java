@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.graphics.PixelFormat;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.speech.tts.TextToSpeech;
@@ -214,9 +215,15 @@ public class EasyPhoneActivity extends Activity
     	{
     		processMenuKey();
     	}
-    	else if(keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP)
+    	if(keyCode == KeyEvent.KEYCODE_VOLUME_UP)
+    	{ 
+    		//increase volume
+    		Utils.increaseVolume(getApplicationContext());
+    	}
+    	else if(keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)
     	{
-    		return false;
+    		// decrease volume
+    		Utils.decreaseVolume(getApplicationContext());
     	}
     	
     	return true;
@@ -252,10 +259,13 @@ public class EasyPhoneActivity extends Activity
         {
         	return onKeyDown(keyCode, event);
         }
-        else if(event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK)
-		{
-			onBackPressed();
-		}
+        else if(event.getAction() == KeyEvent.ACTION_UP)
+        {
+        	if(keyCode == KeyEvent.KEYCODE_BACK)
+        	{
+        		onBackPressed();
+        	}
+        }
         return true;
     }
     

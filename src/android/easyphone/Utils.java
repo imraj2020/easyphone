@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.BatteryManager;
 import android.provider.ContactsContract;
@@ -33,9 +34,48 @@ public class Utils {
 	private static int mBounceThreshold = 1000; //1 second
 	private static long mLastTimeStamp = Long.MIN_VALUE;
 	
+	// Volume vars
+	private static int mMaxMusicVolume = Integer.MIN_VALUE;
+	private static int mMusicVolumeStep = Integer.MAX_VALUE;
+	private static AudioManager mAudioManager = null;
 	/***/
 	
-	//check if event is valid
+	// increase volume
+	public static void increaseVolume(Context context)
+	{
+		if(mAudioManager == null) initializeAudio(context);
+		
+		// set music volume
+		int musicvolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+		int newMusicVolume = musicvolume + mMusicVolumeStep;
+		if(newMusicVolume > mMaxMusicVolume) newMusicVolume = mMaxMusicVolume;
+		mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, newMusicVolume, 0);
+	}
+	
+	// decrease volume
+	public static void decreaseVolume(Context context)
+	{
+		if(mAudioManager == null) initializeAudio(context);
+		
+		// set music volume
+		int musicvolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+		int newMusicVolume = musicvolume - mMusicVolumeStep;
+		if(newMusicVolume < 0) newMusicVolume = 0;
+		mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, newMusicVolume, 0);
+		
+		
+	}
+	
+	// initialize audio variables
+	private static void initializeAudio(Context context)
+	{
+		mAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+		//initialize music stream vars
+		mMaxMusicVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+		mMusicVolumeStep = mMaxMusicVolume / 10;
+	}
+	
+	//check if click event is valid
 	public static boolean isEventValid(MotionEvent event)
 	{
 		boolean result = true;
