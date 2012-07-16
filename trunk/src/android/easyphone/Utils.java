@@ -28,7 +28,17 @@ public class Utils {
 	private static ScreenReceiver mScreenStateReceiver = null;
 	
 	// Contact list vars
-	private static ArrayList<Pair<String, String>> contactsList = new ArrayList<Pair<String, String>>();
+	private static ArrayList<Pair<String, String>> priorityContactsList = new ArrayList<Pair<String, String>>();
+	private static ArrayList<Pair<String, String>> smallContactsList = new ArrayList<Pair<String, String>>();
+	private static ArrayList<Pair<String, String>> a_dContactsList = new ArrayList<Pair<String, String>>();
+	private static ArrayList<Pair<String, String>> e_hContactsList = new ArrayList<Pair<String, String>>();
+	private static ArrayList<Pair<String, String>> i_nContactsList = new ArrayList<Pair<String, String>>();
+	private static ArrayList<Pair<String, String>> o_tContactsList = new ArrayList<Pair<String, String>>();
+	private static ArrayList<Pair<String, String>> u_zContactsList = new ArrayList<Pair<String, String>>();
+	public static int lowContactThreshold = 5;
+	public static int mediumContactThreshold = 15;
+	public static boolean isGroups=false;
+	
 	
 	// Bounce vars
 	private static int mBounceThreshold = 1000; //1 second
@@ -132,9 +142,20 @@ public class Utils {
 	public static void getAllContacts(Context context)
 	{		
 		Log.v(easyphone.EASYPHONE_TAG, "Utils.getAllContacts()");
-		contactsList = new ArrayList<Pair<String, String>>();
-		Cursor people = context.getContentResolver().query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
+		priorityContactsList = new ArrayList<Pair<String, String>>();
 		
+		boolean lessThanLowThreshold = false;
+		boolean lessThanMiddleThreshold = false;
+		
+		Cursor people = context.getContentResolver().query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
+		if (people.getCount() <= lowContactThreshold)
+		{
+			lessThanLowThreshold = true;
+		}
+		else if(people.getCount() <= mediumContactThreshold)
+		{
+			lessThanMiddleThreshold = true;
+		}
 		//Iterate all contacts
 		while(people.moveToNext()) {
 			
@@ -164,7 +185,15 @@ public class Utils {
 		        	 int numberType = phones.getInt(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE));
 			         phoneType = getPhoneNumberType(numberType);
 		         }
-		         contactsList.add(new Pair<String, String>(contact+phoneType, phoneNumber));
+		         if(contact.charAt(contact.length()-1) == '.' || lessThanLowThreshold)
+		         {
+		        	 priorityContactsList.add(new Pair<String, String>(contact+phoneType, phoneNumber));
+		         }
+		         else if(lessThanMiddleThreshold)
+		         {
+		        	 smallContactsList.add(new Pair<String, String>(contact+phoneType, phoneNumber));
+		         }
+		         else insertInAbcdGroups(contact+phoneType, phoneNumber);
 		      }
 			  phones.close();
 		   }
@@ -174,10 +203,49 @@ public class Utils {
 		   }
 		}
 		//Sort the contacts list
-		Collections.sort(contactsList, new pairComparator());
+		Collections.sort(priorityContactsList, new pairComparator());
 		
-		contactsList.add(new Pair<String, String>("Voltar atrás", ""));
+		if(lessThanLowThreshold) priorityContactsList.add(new Pair<String, String>("Voltar atrás", ""));
+		else
+		{
+			priorityContactsList.add(new Pair<String, String>("Outros contactos", ""));
+			priorityContactsList.add(new Pair<String, String>("Voltar atrás", ""));
+			if(lessThanMiddleThreshold)
+			{
+				if (!smallContactsList.isEmpty())
+				{
+					smallContactsList.add(new Pair<String, String>("Voltar atrás", ""));
+				}
+				else
+				{
+					isGroups = true;
+					smallContactsList.add(new Pair<String, String>("De à a d", ""));
+					smallContactsList.add(new Pair<String, String>("De é a h", ""));
+					smallContactsList.add(new Pair<String, String>("De i a n", ""));
+					smallContactsList.add(new Pair<String, String>("De o a t", ""));
+					smallContactsList.add(new Pair<String, String>("De u a z", ""));
+					smallContactsList.add(new Pair<String, String>("Voltar atrás", ""));
+				}
+			}
+		}
 		people.close();
+	}
+	
+	
+	private static void insertInAbcdGroups(String contact, String phoneNumber)
+	{
+		String a_d= "abcd";
+		String e_h= "efgh";
+		String i_n= "ijklmn";
+		String o_t= "opqrst";
+		String u_z= "uvwxyz";
+		char contactInitial = contact.charAt(0);
+		String initial = Character.toString(contactInitial);
+		if (a_d.contains(initial)) a_dContactsList.add(new Pair<String, String>(contact, phoneNumber));
+		else if (e_h.contains(initial)) e_hContactsList.add(new Pair<String, String>(contact, phoneNumber));
+		else if (i_n.contains(initial)) i_nContactsList.add(new Pair<String, String>(contact, phoneNumber));
+		else if (o_t.contains(initial)) o_tContactsList.add(new Pair<String, String>(contact, phoneNumber));
+		else if (u_z.contains(initial)) u_zContactsList.add(new Pair<String, String>(contact, phoneNumber));
 	}
 	
 	//Function to return a string with the type of phone number
@@ -201,9 +269,39 @@ public class Utils {
         return s;
 	}
 	
-	public static ArrayList<Pair<String, String>> getContactsList()
+	public static ArrayList<Pair<String, String>> getSmallContactsList()
 	{
-		return contactsList;
+		return smallContactsList;
+	}
+	
+	public static ArrayList<Pair<String, String>> getPriorityContactsList()
+	{
+		return priorityContactsList;
+	}
+	
+	public static ArrayList<Pair<String, String>> geta_dContactsList()
+	{
+		return a_dContactsList;
+	}
+	
+	public static ArrayList<Pair<String, String>> gete_hContactsList()
+	{
+		return e_hContactsList;
+	}
+	
+	public static ArrayList<Pair<String, String>> geti_nContactsList()
+	{
+		return i_nContactsList;
+	}
+	
+	public static ArrayList<Pair<String, String>> geto_tContactsList()
+	{
+		return o_tContactsList;
+	}
+	
+	public static ArrayList<Pair<String, String>> getu_zContactsList()
+	{
+		return u_zContactsList;
 	}
 
     public static class pairComparator implements Comparator<Pair<String, String>> {

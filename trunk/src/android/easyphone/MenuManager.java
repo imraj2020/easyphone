@@ -17,7 +17,7 @@ public class MenuManager {
     private boolean mIsScanning = false;
     private final int NCYCLES = 2;
     private int READ_TITLE_TIME = 2000; //ms
-    private int READ_OPTION_TIME = 5000; //ms
+    private int READ_OPTION_TIME = 7000; //ms
 	
 	public MenuManager() 
 	{
