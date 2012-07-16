@@ -46,7 +46,7 @@ public class easyphone extends EasyPhoneActivity implements OnInitListener{
         startActivityForResult(checkIntent, MY_DATA_CHECK_CODE); //wait for activity result
        
         //Get Contacts from Phone Contact List
-        //Utils.getAllContacts(getApplicationContext());
+        Utils.getAllContacts(getApplicationContext());
 
 		//Set Menu Options
         mMenu.setTitle((String) ((TextView)this.findViewById(R.id.TextView01)).getText());
@@ -72,6 +72,7 @@ public class easyphone extends EasyPhoneActivity implements OnInitListener{
 	    		Log.v(EASYPHONE_TAG, "make call");
 	    		//Call
 	    		Intent contactList =  new Intent(getApplicationContext(), ContactList.class);
+	    		contactList.putExtra("contactListType", "priority");
 	    		startActivity(contactList);
 	    		break;
 	    	}
