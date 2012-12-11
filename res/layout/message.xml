@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent"
+  android:id="@+id/LinearLayoutId01">
+
+<TextView 
+	android:textStyle="bold" 
+	android:id="@+id/tvTitle" 
+	android:textColor="#dddddd" 
+	android:typeface="sans" 
+	android:layout_height="wrap_content" 
+	android:layout_width="fill_parent" 
+	android:text="Mensagem" 
+	android:textSize="25sp" />
+	
+<TextView 
+	android:id="@+id/tvBack" 
+	android:layout_width="fill_parent" 
+	android:layout_height="wrap_content" 
+	android:text="1, Voltar atrás" 
+	android:typeface="sans" 
+	android:textStyle="bold" 
+	android:textSize="18sp" 
+	android:textColor="#dddddd"/>
+
+<TextView 
+	android:id="@+id/tvRead" 
+	android:layout_width="fill_parent" 
+	android:layout_height="wrap_content" 
+	android:text="2, Ler mensagem" 
+	android:typeface="sans" 
+	android:textStyle="bold" 
+	android:textSize="18sp" 
+	android:textColor="#dddddd"/>
+
+<TextView 
+	android:id="@+id/tvDelete" 
+	android:layout_width="fill_parent" 
+	android:layout_height="wrap_content" 
+	android:text="3, Apagar mensagem" 
+	android:typeface="sans" 
+	android:textStyle="bold" 
+	android:textSize="18sp" 
+	android:textColor="#dddddd"/>
+	
+<TextView 
+	android:id="@+id/tvDetails" 
+	android:layout_width="fill_parent" 
+	android:layout_height="wrap_content" 
+	android:text="4, Detalhes" 
+	android:typeface="sans" 
+	android:textStyle="bold" 
+	android:textSize="18sp" 
+	android:textColor="#dddddd"/>
+</LinearLayout>

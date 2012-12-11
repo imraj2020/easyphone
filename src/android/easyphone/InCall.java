@@ -23,20 +23,19 @@ public class InCall extends EasyPhoneActivity {
         getApplicationContext().registerReceiver(receiver, new IntentFilter("android.easyphone.CLOSE_INCALL_ACTIVITY"));
         
         //Get UI Elements
-        mMenu = new MenuManager(100, 5000);
+        mMenu = new MenuManager();
         mMenu.setTitle((String) ((TextView)this.findViewById(R.id.TextView01)).getText());
         mMenu.addOption((String) ((TextView)this.findViewById(R.id.TextView02)).getText());
         
         //Turn Speaker ON
-		mAudioManager = (AudioManager)getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+		mAudioManager = (AudioManager)InCall.this.getSystemService(Context.AUDIO_SERVICE);
 		
-		Log.v(EASYPHONE_TAG, "isBluetoothScoOn: " + mAudioManager.isBluetoothScoOn());
-		
-		if(!mAudioManager.isBluetoothScoOn() && !mAudioManager.isWiredHeadsetOn())
-		{
-			mAudioManager.setSpeakerphoneOn(true);
-		}
-		
+		//Log.v(EASYPHONE_TAG, "isHeadsetOn: " + mAudioManager.isWiredHeadsetOn());
+		int mode = mAudioManager.getMode();
+    	mAudioManager.setMode(AudioManager.MODE_IN_CALL);
+    	if(!mAudioManager.isWiredHeadsetOn()) mAudioManager.setSpeakerphoneOn(true);
+    	mAudioManager.setMode(mode);
+		//else mAudioManager.setSpeakerphoneOn(false);*/
     }
     
     @Override
@@ -45,9 +44,12 @@ public class InCall extends EasyPhoneActivity {
     	super.onStart();
     	
     	//Turn Speaker ON
-    	/*Log.v(EASYPHONE_TAG, "isBluetoothScoOn: " + mAudioManager.isBluetoothScoOn());
-    	if(!mAudioManager.isBluetoothScoOn()) mAudioManager.setSpeakerphoneOn(true);
-    	else mAudioManager.setSpeakerphoneOn(false);*/
+    	Log.v(EASYPHONE_TAG, "isHeadsetOn: " + mAudioManager.isWiredHeadsetOn());
+    	int mode = mAudioManager.getMode();
+    	mAudioManager.setMode(AudioManager.MODE_IN_CALL);
+    	if(!mAudioManager.isWiredHeadsetOn()) mAudioManager.setSpeakerphoneOn(true);
+    	mAudioManager.setMode(mode);
+    	//else mAudioManager.setSpeakerphoneOn(false);*/
     }
     
     @Override
@@ -56,11 +58,12 @@ public class InCall extends EasyPhoneActivity {
     	super.onResume();
     	
     	//Turn Speaker ON
-    	/*Log.v(EASYPHONE_TAG, "isBluetoothScoOn: " + mAudioManager.isBluetoothScoOn());
-    	if(!mAudioManager.isBluetoothScoOn()) 
-    		mAudioManager.setSpeakerphoneOn(true);
-    	else
-    		mAudioManager.setSpeakerphoneOn(false);*/
+    	Log.v(EASYPHONE_TAG, "isHeadsetOn: " + mAudioManager.isWiredHeadsetOn());
+    	int mode = mAudioManager.getMode();
+    	mAudioManager.setMode(AudioManager.MODE_IN_CALL);
+    	if(!mAudioManager.isWiredHeadsetOn()) mAudioManager.setSpeakerphoneOn(true);
+    	mAudioManager.setMode(mode);
+    	/*else mAudioManager.setSpeakerphoneOn(false);*/
     }
     
     @Override
@@ -82,21 +85,39 @@ public class InCall extends EasyPhoneActivity {
             	// check if it is a bounce
             	  if(!Utils.isEventValid(event)) break;
             	  
-            	  // finger up event, END CALL
-            	  selectOption(0);
+            	  // finger up event, Select current option
+            	  int option = mMenu.getCurrentOption();
+            	  
+            	  if(option >= 0)
+            	  {
+            		  //is scanning, thus select option
+            		  mMenu.stopScanning();
+            		  selectOption(option);
+            	  }
+            	  else if(option == -1 && mMenu.isScanning())
+            	  { // still reading title, thus selection option 1
+            		  mMenu.stopScanning();
+            		  selectOption(0);
+            	  }
+            	  else
+            	  {
+            		//is not scanning, thus start scanning
+            		  mMenu.startScanning(false);
+            	  }
+            	  
                   break;
               }
             }
     	return true;
     }
     
-    @Override
+   /* @Override
     public void onBackPressed() 
     {
     	Log.v(easyphone.EASYPHONE_TAG, "InCall.onBackPressed()");
     	// finger up event, END CALL
     	selectOption(0);
-    }
+    }*/
     
     @Override
     protected void selectOption(int option)
@@ -118,7 +139,8 @@ public class InCall extends EasyPhoneActivity {
     public void finish()
     {
     	//Turn Speaker OFF
-		mAudioManager.setSpeakerphoneOn(false);
+    	mAudioManager.setMode(AudioManager.MODE_IN_CALL);
+    	mAudioManager.setSpeakerphoneOn(false);
     	super.finish();
     }
     

@@ -17,7 +17,7 @@ public class MenuManager {
     private boolean mIsScanning = false;
     private final int NCYCLES = 2;
     private int READ_TITLE_TIME = 2000; //ms
-    private int READ_OPTION_TIME = 7000; //ms
+    private int READ_OPTION_TIME = 3000; //ms
 	
 	public MenuManager() 
 	{
@@ -36,13 +36,23 @@ public class MenuManager {
 	
 	public void addOption(String option)
 	{
-		Log.v(easyphone.EASYPHONE_TAG, "MenuManager.addOption()");
+		Log.v(easyphone.EASYPHONE_TAG, "MenuManager.addOption() - " + option);
 		mOptions.add(option);
+	}
+	
+	public int getNumberOptions()
+	{
+		return mOptions.size();
+	}
+	
+	public void clearOptions()
+	{
+		mOptions.clear();
 	}
 	
 	public void setTitle(String title)
 	{
-		Log.v(easyphone.EASYPHONE_TAG, "MenuManager.setTitle()");
+		Log.v(easyphone.EASYPHONE_TAG, "MenuManager.setTitle() - " + title);
 		mTitle = title;
 	}
 	
@@ -118,6 +128,21 @@ public class MenuManager {
 	{
 		Log.v(easyphone.EASYPHONE_TAG, "MenuManager.isScanning()");
 		return mIsScanning;
+	}
+	
+	public void setReadOptionTime(int time)
+	{
+		READ_OPTION_TIME = time;
+	}
+	
+	public void setReadTitleTime(int time)
+	{
+		READ_TITLE_TIME = time;
+	}
+	
+	public int getReadOptionTime()
+	{
+		return READ_OPTION_TIME;
 	}
 
 }

@@ -3,7 +3,6 @@ import java.util.ArrayList;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.util.Pair;
 import android.view.ViewGroup.LayoutParams;

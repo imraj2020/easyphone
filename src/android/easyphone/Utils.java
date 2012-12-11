@@ -3,18 +3,14 @@ package android.easyphone;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Timer;
-
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.easyphone.SMS.SMSManager;
 import android.media.AudioManager;
 import android.net.Uri;
-import android.os.BatteryManager;
 import android.provider.ContactsContract;
-import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.util.Pair;
 import android.view.MotionEvent;
@@ -40,6 +36,8 @@ public class Utils {
 	public static int numberOfContacts = 15;
 	public static boolean isGroups=false;
 	
+	// SMS Manager
+	public static SMSManager mSMSManager = null;
 	
 	// Bounce vars
 	private static int mBounceThreshold = 1000; //1 second
@@ -49,6 +47,7 @@ public class Utils {
 	private static int mMaxMusicVolume = Integer.MIN_VALUE;
 	private static int mMusicVolumeStep = Integer.MAX_VALUE;
 	private static AudioManager mAudioManager = null;
+	
 	/***/
 	
 	// increase volume
@@ -138,6 +137,44 @@ public class Utils {
 		}
 
 		return name;
+	}
+	
+	// return contact for TTS to read
+	public static String getFormatedPhoneNumber(Context context, String number)
+	{
+		String name = "";
+		
+		if((name = Utils.getContactName(context, number)) != null)
+        {
+			// return contact name
+    		return name;
+        }
+        else
+        {
+        	// unknown contact name
+        	if(Utils.isPhoneNumber(number))
+        	{
+        		// return phone number separated by blank spaces
+            	String aux = "";
+            	for (char c : number.toCharArray())
+                {
+                    aux += c;
+                    aux += " ";
+                }
+            	return aux;
+        	}
+        	else
+        	{
+        		// return sender name
+        		return number;
+        	}
+        }
+	}
+	
+	// return true if string is a phone number
+	public static boolean isPhoneNumber(String number)
+	{
+		return number.matches("\\+?\\d+");
 	}
 	
 	public static void getAllContacts(Context context)
@@ -335,6 +372,12 @@ public class Utils {
 	        return name1.first.compareTo(name2.first);
 	    }
 	}
+    
+    /* SMS Manager*/
+    public static void configSMSManager(Context context)
+    {
+    	mSMSManager = new SMSManager(context);
+    }
     
     /* Battery Event Listener */
 	public static void registerBatteryListener(Context context)

@@ -3,7 +3,7 @@ package android.easyphone;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
+import android.speech.tts.TextToSpeech;
 
 public class ScreenReceiver extends BroadcastReceiver {
 
@@ -13,12 +13,12 @@ public class ScreenReceiver extends BroadcastReceiver {
 		if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) 
 		{
             // play screen off sound
-			if(easyphone.mTTS != null) easyphone.mTTS.playEarcon("screenoff", easyphone.mTTS.QUEUE_FLUSH, null);
+			if(easyphone.mTTS != null) easyphone.mTTS.playEarcon("screenoff", TextToSpeech.QUEUE_FLUSH, null);
         
         } else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) 
         {
             // play screen on sound
-        	if(easyphone.mTTS != null) easyphone.mTTS.playEarcon("screenon", easyphone.mTTS.QUEUE_FLUSH, null);
+        	if(easyphone.mTTS != null) easyphone.mTTS.playEarcon("screenon", TextToSpeech.QUEUE_FLUSH, null);
         }
 	}
 
