@@ -6,18 +6,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Locale;
-
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.AssetManager;
-import android.media.AudioManager;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 import android.text.format.Time;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,13 +42,18 @@ public class easyphone extends EasyPhoneActivity implements OnInitListener{
         startActivityForResult(checkIntent, MY_DATA_CHECK_CODE); //wait for activity result
        
         //Get Contacts from Phone Contact List
-        Utils.getAllContacts(getApplicationContext());
+        //Utils.getAllContacts(getApplicationContext());
 
+        //Config SMSManager
+        Utils.configSMSManager(getApplicationContext());
+        
 		//Set Menu Options
         mMenu.setTitle((String) ((TextView)this.findViewById(R.id.TextView01)).getText());
         mMenu.addOption((String) ((TextView)this.findViewById(R.id.TextView02)).getText());
         mMenu.addOption((String) ((TextView)this.findViewById(R.id.TextView03)).getText());
         mMenu.addOption((String) ((TextView)this.findViewById(R.id.TextView04)).getText());
+        mMenu.addOption((String) ((TextView)this.findViewById(R.id.TextView05)).getText());
+        mMenu.addOption((String) ((TextView)this.findViewById(R.id.TextView06)).getText());
         
         //Battery
         Utils.registerBatteryListener(getApplicationContext());
@@ -90,6 +91,21 @@ public class easyphone extends EasyPhoneActivity implements OnInitListener{
 	    	{
 	    		Log.v(EASYPHONE_TAG, "battery");
 	    		easyphone.mTTS.speak(String.valueOf(Utils.getBatteryLevel()) + " porcento", TextToSpeech.QUEUE_ADD, null);
+	    		break;
+	    	}
+	    	case 3: //Text Messages
+	    	{
+	    		Log.v(EASYPHONE_TAG, "messages");
+	    		//Call
+	    		Intent messageList =  new Intent(getApplicationContext(), MessageList.class);
+	    		messageList.putExtra("messageListType", "priority");
+	    		startActivity(messageList);
+	    		break;
+	    	}
+	    	case 4: //Unanswered calls
+	    	{
+	    		Log.v(EASYPHONE_TAG, "unanswered calls");
+	    		
 	    		break;
 	    	}
     	}
@@ -141,7 +157,7 @@ public class easyphone extends EasyPhoneActivity implements OnInitListener{
     		mTTS.addEarcon("screenoff", "/sdcard/EasyPhone/screenoff.wav");
     		mTTS.addEarcon("exit", "/sdcard/EasyPhone/exit.wav");
     		
-    		if(!startedSound) mTTS.playEarcon("startup", mTTS.QUEUE_FLUSH, null);
+    		if(!startedSound) mTTS.playEarcon("startup", TextToSpeech.QUEUE_FLUSH, null);
     		startedSound = true;
     	}
     	else //ERROR

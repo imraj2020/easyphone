@@ -20,6 +20,7 @@ import java.lang.reflect.Method;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.telephony.TelephonyManager;
@@ -98,7 +99,13 @@ public class CallControl extends BroadcastReceiver {
 			new Handler().postDelayed(new Runnable() 
 			{
 				public void run() 
-			    {        
+			    {
+					AudioManager mAudioManager = (AudioManager)CallControl.this.context.getSystemService(Context.AUDIO_SERVICE);
+					int mode = mAudioManager.getMode();
+			    	mAudioManager.setMode(AudioManager.MODE_IN_CALL);
+			    	if(!mAudioManager.isWiredHeadsetOn()) mAudioManager.setSpeakerphoneOn(true);
+			    	mAudioManager.setMode(mode);
+					
 					//launch new dialer UI
 					Log.v(TAG, "Launching new dialer activity ...");
 			        Intent intentInCall = new Intent(CallControl.this.context, InCall.class);

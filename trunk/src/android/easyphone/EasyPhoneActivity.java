@@ -6,15 +6,12 @@ import android.app.Activity;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.graphics.PixelFormat;
-import android.media.AudioManager;
 import android.os.Bundle;
-import android.os.PowerManager;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
@@ -245,7 +242,7 @@ public class EasyPhoneActivity extends Activity
     // default selectOption behavior
     protected void selectOption(int option)
     {
-    	Log.v(EASYPHONE_TAG, mName + ".selectOption()");
+    	Log.v(EASYPHONE_TAG, mName + ".selectOption() - " + option);
     	easyphone.mTTS.playEarcon("click", TextToSpeech.QUEUE_FLUSH, null);
     }
     
@@ -317,7 +314,7 @@ public class EasyPhoneActivity extends Activity
     	}
     	if(mMenuHits >= 4)
     	{ // 4 consecutive hits, exit app
-    		if(easyphone.mTTS != null) easyphone.mTTS.playEarcon("exit", easyphone.mTTS.QUEUE_FLUSH, null);
+    		if(easyphone.mTTS != null) easyphone.mTTS.playEarcon("exit", TextToSpeech.QUEUE_FLUSH, null);
     		while(easyphone.mTTS != null && easyphone.mTTS.isSpeaking());
     		finish();
     		System.exit(RESULT_OK);
