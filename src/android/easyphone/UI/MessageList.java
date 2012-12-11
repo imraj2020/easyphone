@@ -26,12 +26,6 @@ public class MessageList extends EasyPhoneActivity{
         super.onCreate(savedInstanceState, "MessageList", R.layout.messagelist);
         setContentView(R.layout.messagelist);
         
-        // adjust menu reading time in order to read phone numbers
-        if(mMenu.getReadOptionTime() < 7000)
-        {
-        	mMenu.setReadOptionTime(7000);
-        }
-        
         // get list type 
         mListType = (String) getIntent().getExtras().get("messageListType");
         

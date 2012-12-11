@@ -22,17 +22,6 @@ public class MissedCalls extends EasyPhoneActivity{
         super.onCreate(savedInstanceState, mActivityName, mLayoutResource);
         setContentView(mLayoutResource);
         
-        // adjust menu reading time in order to read phone numbers
-        if(mMenu.getReadOptionTime() < 8000)
-        {
-        	mMenu.setReadOptionTime(8000);
-        }
-        
-        if(mMenu.getReadTitleTime() < 3500)
-        {
-        	mMenu.setReadOptionTime(3500);
-        }
-        
         // get missed calls
         mMissedCalls = Utils.mCallsManager.getMissedCalls();
         

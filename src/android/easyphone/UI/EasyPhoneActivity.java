@@ -41,7 +41,7 @@ public class EasyPhoneActivity extends Activity
     {
     	mName = activityName;
     	Log.v(EASYPHONE_TAG, mName + ".onCreate()");
-   
+    	
     	super.onCreate(savedInstanceState);
    
     	// Initialize Scanning Menu
