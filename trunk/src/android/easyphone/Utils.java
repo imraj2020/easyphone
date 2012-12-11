@@ -37,6 +37,7 @@ public class Utils {
 	private static ArrayList<Pair<String, String>> u_zContactsList = new ArrayList<Pair<String, String>>();
 	public static int lowContactThreshold = 5;
 	public static int mediumContactThreshold = 15;
+	public static int numberOfContacts = 15;
 	public static boolean isGroups=false;
 	
 	
@@ -148,11 +149,13 @@ public class Utils {
 		boolean lessThanMiddleThreshold = false;
 		
 		Cursor people = context.getContentResolver().query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
-		if (people.getCount() <= lowContactThreshold)
+		numberOfContacts = people.getCount();
+		
+		if (numberOfContacts <= lowContactThreshold)
 		{
 			lessThanLowThreshold = true;
 		}
-		else if(people.getCount() <= mediumContactThreshold)
+		else if(numberOfContacts <= mediumContactThreshold)
 		{
 			lessThanMiddleThreshold = true;
 		}
@@ -193,9 +196,13 @@ public class Utils {
 		         {
 		        	 smallContactsList.add(new Pair<String, String>(contact+phoneType, phoneNumber));
 		         }
-		         else insertInAbcdGroups(contact+phoneType, phoneNumber);
+		         else
+		         {
+		        	 insertInAbcdGroups(contact+phoneType, phoneNumber);
+		         }
 		      }
 			  phones.close();
+			  
 		   }
 		   catch(Exception e){
 			   Log.v(easyphone.EASYPHONE_TAG, "Utils.getAllContacts() - EXCEPTION");
@@ -214,18 +221,32 @@ public class Utils {
 			{
 				if (!smallContactsList.isEmpty())
 				{
+					Collections.sort(smallContactsList, new pairComparator());
 					smallContactsList.add(new Pair<String, String>("Voltar atrás", ""));
 				}
-				else
-				{
-					isGroups = true;
-					smallContactsList.add(new Pair<String, String>("De à a d", ""));
-					smallContactsList.add(new Pair<String, String>("De é a h", ""));
-					smallContactsList.add(new Pair<String, String>("De i a n", ""));
-					smallContactsList.add(new Pair<String, String>("De o a t", ""));
-					smallContactsList.add(new Pair<String, String>("De u a z", ""));
-					smallContactsList.add(new Pair<String, String>("Voltar atrás", ""));
-				}
+			}
+			else
+			{
+				isGroups = true;
+				smallContactsList.add(new Pair<String, String>("à, a, d", ""));
+				smallContactsList.add(new Pair<String, String>("é, a, h", ""));
+				smallContactsList.add(new Pair<String, String>("iii, a, n", ""));
+				smallContactsList.add(new Pair<String, String>("ó, a, t", ""));
+				smallContactsList.add(new Pair<String, String>("u, a, z", ""));
+				smallContactsList.add(new Pair<String, String>("Voltar atrás", ""));
+				
+				
+				Collections.sort(a_dContactsList, new pairComparator());
+				Collections.sort(e_hContactsList, new pairComparator());
+				Collections.sort(i_nContactsList, new pairComparator());
+				Collections.sort(o_tContactsList, new pairComparator());
+				Collections.sort(u_zContactsList, new pairComparator());
+				a_dContactsList.add(new Pair<String, String>("Voltar atrás", ""));
+				e_hContactsList.add(new Pair<String, String>("Voltar atrás", ""));
+				i_nContactsList.add(new Pair<String, String>("Voltar atrás", ""));
+				o_tContactsList.add(new Pair<String, String>("Voltar atrás", ""));
+				u_zContactsList.add(new Pair<String, String>("Voltar atrás", ""));
+				
 			}
 		}
 		people.close();
@@ -240,7 +261,7 @@ public class Utils {
 		String o_t= "opqrst";
 		String u_z= "uvwxyz";
 		char contactInitial = contact.charAt(0);
-		String initial = Character.toString(contactInitial);
+		String initial = Character.toString(contactInitial).toLowerCase();
 		if (a_d.contains(initial)) a_dContactsList.add(new Pair<String, String>(contact, phoneNumber));
 		else if (e_h.contains(initial)) e_hContactsList.add(new Pair<String, String>(contact, phoneNumber));
 		else if (i_n.contains(initial)) i_nContactsList.add(new Pair<String, String>(contact, phoneNumber));
@@ -302,6 +323,11 @@ public class Utils {
 	public static ArrayList<Pair<String, String>> getu_zContactsList()
 	{
 		return u_zContactsList;
+	}
+	
+	public static int getNumberOfContacts()
+	{
+		return numberOfContacts;
 	}
 
     public static class pairComparator implements Comparator<Pair<String, String>> {
