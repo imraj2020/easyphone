@@ -1,7 +1,11 @@
-package android.easyphone;
+package android.easyphone.UI;
 import java.util.ArrayList;
 
 import android.content.Intent;
+import android.easyphone.R;
+import android.easyphone.Utils;
+import android.easyphone.R.id;
+import android.easyphone.R.layout;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;

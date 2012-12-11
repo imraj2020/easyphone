@@ -8,6 +8,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.easyphone.Utils;
 import android.net.Uri;
 import android.telephony.gsm.SmsManager;;
 
@@ -48,11 +49,11 @@ public class SMSManager {
             if (c.getCount() > 0) {
                 for (boolean hasData = c.moveToFirst() ; hasData ; hasData = c.moveToNext()) {
                     Date date = new Date();
-                    date.setTime(Long.parseLong(Tools.getString(c ,"date")));
+                    date.setTime(Long.parseLong(Utils.getString(c ,"date")));
                     SMS sms = new SMS();
                     sms.date = date;
-                    sms.number = Tools.getString(c ,"address");
-                    sms.message = Tools.getString(c ,"body");
+                    sms.number = Utils.getString(c ,"address");
+                    sms.message = Utils.getString(c ,"body");
                     sms.sender = contactName;
                     res.add( sms );
                 }
@@ -76,14 +77,14 @@ public class SMSManager {
             if (c.getCount() > 0) {
                 for (boolean hasData = c.moveToFirst() ; hasData ; hasData = c.moveToNext()) {
                     Date date = new Date();
-                    date.setTime(Long.parseLong(Tools.getString(c ,"date")));
+                    date.setTime(Long.parseLong(Utils.getString(c ,"date")));
                     SMS sms = new SMS();
                     sms.date = date;
-                    sms.number = Tools.getString(c ,"address");
-                    sms.message = Tools.getString(c ,"body");
-                    sms.sender = Tools.getString(c, "person");
-                    sms.id = Tools.getString(c, "_id");
-                    sms.threadid = Tools.getString(c, "thread_id");
+                    sms.number = Utils.getString(c ,"address");
+                    sms.message = Utils.getString(c ,"body");
+                    sms.sender = Utils.getString(c, "person");
+                    sms.id = Utils.getString(c, "_id");
+                    sms.threadid = Utils.getString(c, "thread_id");
                     res.add(sms);
                 }
             }
@@ -114,11 +115,11 @@ public class SMSManager {
         if (c.getCount() > 0) {
             for (boolean hasData = c.moveToFirst() ; hasData ; hasData = c.moveToNext()) {
                 Date date = new Date();
-                date.setTime(Long.parseLong(Tools.getString(c ,"date")));
+                date.setTime(Long.parseLong(Utils.getString(c ,"date")));
                 SMS sms = new SMS();
                 sms.date = date;
-                sms.number = Tools.getString(c ,"address");
-                sms.message = Tools.getString(c ,"body");
+                sms.number = Utils.getString(c ,"address");
+                sms.message = Utils.getString(c ,"body");
                 sms.sender = "Me";
                 res.add( sms );
 

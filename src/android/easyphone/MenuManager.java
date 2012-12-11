@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.easyphone.UI.easyphone;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 
@@ -143,6 +144,11 @@ public class MenuManager {
 	public int getReadOptionTime()
 	{
 		return READ_OPTION_TIME;
+	}
+	
+	public int getReadTitleTime()
+	{
+		return READ_TITLE_TIME;
 	}
 
 }

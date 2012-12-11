@@ -1,10 +1,12 @@
-package android.easyphone;
+package android.easyphone.UI;
 
 import java.util.Timer;
 import java.util.TimerTask;
 import android.app.Activity;
 import android.app.KeyguardManager;
 import android.content.Context;
+import android.easyphone.MenuManager;
+import android.easyphone.Utils;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;

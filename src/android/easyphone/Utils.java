@@ -7,7 +7,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.easyphone.Calls.CallsManager;
 import android.easyphone.SMS.SMSManager;
+import android.easyphone.UI.easyphone;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.provider.ContactsContract;
@@ -38,6 +40,9 @@ public class Utils {
 	
 	// SMS Manager
 	public static SMSManager mSMSManager = null;
+	
+	// Calls Manager
+	public static CallsManager mCallsManager = null;
 	
 	// Bounce vars
 	private static int mBounceThreshold = 1000; //1 second
@@ -174,6 +179,8 @@ public class Utils {
 	// return true if string is a phone number
 	public static boolean isPhoneNumber(String number)
 	{
+		if(number==null) return false;
+		
 		return number.matches("\\+?\\d+");
 	}
 	
@@ -377,6 +384,21 @@ public class Utils {
     public static void configSMSManager(Context context)
     {
     	mSMSManager = new SMSManager(context);
+    }
+    
+    /* Calls Manager*/
+    public static void configCallsManager(Context context)
+    {
+    	mCallsManager = new CallsManager(context);
+    }
+    
+    /* Cursor Utilities */
+    public static Long getLong(Cursor c, String col) {
+        return c.getLong(c.getColumnIndex(col));
+    }
+
+    public static String getString(Cursor c, String col) {
+        return c.getString(c.getColumnIndex(col));
     }
     
     /* Battery Event Listener */
