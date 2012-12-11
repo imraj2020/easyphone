@@ -319,6 +319,7 @@ public class EasyPhoneActivity extends Activity
     	{ // 4 consecutive hits, exit app
     		if(easyphone.mTTS != null) easyphone.mTTS.playEarcon("exit", easyphone.mTTS.QUEUE_FLUSH, null);
     		while(easyphone.mTTS != null && easyphone.mTTS.isSpeaking());
+    		finish();
     		System.exit(RESULT_OK);
     	}
     }

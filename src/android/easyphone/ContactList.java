@@ -29,11 +29,11 @@ public class ContactList extends EasyPhoneActivity {
         {
         	contactsList = Utils.getSmallContactsList();
         }
-        if (contactListType.equalsIgnoreCase("a_d")) Utils.geta_dContactsList();
-		else if (contactListType.equalsIgnoreCase("e_h")) Utils.gete_hContactsList();
-		else if (contactListType.equalsIgnoreCase("i_n")) Utils.geti_nContactsList();
-		else if (contactListType.equalsIgnoreCase("o_t")) Utils.geto_tContactsList();
-		else if (contactListType.equalsIgnoreCase("u_z")) Utils.getu_zContactsList();
+        if (contactListType.equalsIgnoreCase("a_d")) contactsList=Utils.geta_dContactsList();
+		else if (contactListType.equalsIgnoreCase("e_h")) contactsList=Utils.gete_hContactsList();
+		else if (contactListType.equalsIgnoreCase("i_n")) contactsList=Utils.geti_nContactsList();
+		else if (contactListType.equalsIgnoreCase("o_t")) contactsList=Utils.geto_tContactsList();
+		else if (contactListType.equalsIgnoreCase("u_z")) contactsList=Utils.getu_zContactsList();
 
         
         //Set Menu Options
@@ -56,6 +56,9 @@ public class ContactList extends EasyPhoneActivity {
     {
     	super.selectOption(option);
     	
+    	Log.v(EASYPHONE_TAG, "Contact List Type: " + contactListType);
+    	Log.v(EASYPHONE_TAG, "Is groups: " + Utils.isGroups);
+    	
     	/*
     	 easyphone.callControl.makeCall(Utils.getContactsList()[option-1], getApplicationContext());
     	  
@@ -65,27 +68,26 @@ public class ContactList extends EasyPhoneActivity {
     	{
     		this.finish();
     	}
-    	else if(option==contactsList.size()-2 && contactsList.size()-1 > Utils.lowContactThreshold && contactListType=="priority")
+    	else if(option==contactsList.size()-2 && Utils.getNumberOfContacts() > Utils.lowContactThreshold && contactListType.equalsIgnoreCase("priority"))
     	{
-    		/*
     		Intent contactList =  new Intent(getApplicationContext(), ContactList.class);
     		contactList.putExtra("contactListType", "smallList");
     		startActivity(contactList);
-    		*/
+    		
     	}
-    	else if(contactListType=="smallList" && Utils.isGroups)
+    	else if(contactListType.equalsIgnoreCase("smallList") && Utils.isGroups)
     	{
-    		/*
+    		Log.v(EASYPHONE_TAG, "Right placee");
+    		Log.v(EASYPHONE_TAG, "Option: " + option);
     		String listType = null;
-    		if (option==1) listType= "a_d";
-    		else if(option==2) listType="e_h";
-    		else if(option==3) listType="i_n";
-    		else if(option==4) listType="o_t";
-    		else if(option==5) listType="u_z";
+    		if (option==0) listType= "a_d";
+    		else if(option==1) listType="e_h";
+    		else if(option==2) listType="i_n";
+    		else if(option==3) listType="o_t";
+    		else if(option==4) listType="u_z";
     		Intent contactList =  new Intent(getApplicationContext(), ContactList.class);
     		contactList.putExtra("contactListType", listType);
     		startActivity(contactList);
-    		*/
     	}
     	else
     	{
