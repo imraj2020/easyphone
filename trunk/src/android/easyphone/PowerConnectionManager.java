@@ -3,6 +3,7 @@ package android.easyphone;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.easyphone.UI.easyphone;
 import android.os.BatteryManager;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;

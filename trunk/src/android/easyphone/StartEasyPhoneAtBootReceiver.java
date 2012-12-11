@@ -3,6 +3,8 @@ package android.easyphone;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.easyphone.UI.EasyPhoneActivity;
+import android.easyphone.UI.easyphone;
 import android.util.Log;
 
 public class StartEasyPhoneAtBootReceiver extends BroadcastReceiver{

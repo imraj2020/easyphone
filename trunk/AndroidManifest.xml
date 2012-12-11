@@ -24,20 +24,18 @@
         
 		<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 		
-        <activity android:name=".easyphone"
-                  android:label="@string/app_name" 
+        <activity android:label="@string/app_name" 
                   android:screenOrientation="portrait"
-                  android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+                  android:theme="@android:style/Theme.NoTitleBar.Fullscreen" android:name=".UI.easyphone">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-	    <activity android:name=".IncomingCall" 
-	    			android:label="@string/app_name" 
+	    <activity android:label="@string/app_name" 
 	    			android:screenOrientation="portrait"
-	    			android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+	    			android:theme="@android:style/Theme.NoTitleBar.Fullscreen" android:name=".UI.IncomingCall">
 		    <intent-filter>
 		        <action android:name="android.intent.action.ANSWER" />
 		        <action android:name="android.easyphone.CLOSE_INCOMINGCALL_ACTIVITY" />
@@ -45,33 +43,32 @@
 		    </intent-filter>
 	    </activity>
 	    
-		<activity android:name=".InCall" 
-					android:screenOrientation="portrait"
-					android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+		<activity android:screenOrientation="portrait"
+					android:theme="@android:style/Theme.NoTitleBar.Fullscreen" android:name=".UI.InCall">
 			<intent-filter>
 		        <action android:name="android.easyphone.CLOSE_INCALL_ACTIVITY" />
 		        <action android:name="android.easyphone.action.INCALL" />
 		    </intent-filter>
 		</activity>
 		
-		<activity android:name=".ContactList" 
-					android:screenOrientation="portrait"
-					android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+		<activity android:screenOrientation="portrait"
+					android:theme="@android:style/Theme.NoTitleBar.Fullscreen" android:name=".UI.ContactList">
 		</activity>
 		
-		<activity android:name=".MessageList" 
-					android:screenOrientation="portrait"
-					android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+		<activity android:screenOrientation="portrait"
+					android:theme="@android:style/Theme.NoTitleBar.Fullscreen" android:name=".UI.MessageList">
 		</activity>
 		
-		<activity android:name=".Message" 
-					android:screenOrientation="portrait"
-					android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+		<activity android:screenOrientation="portrait"
+					android:theme="@android:style/Theme.NoTitleBar.Fullscreen" android:name=".UI.Message">
 		</activity>
 		
-		<activity android:name=".EasyPhoneActivity" 
-					android:screenOrientation="portrait"
-					android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+		<activity android:screenOrientation="portrait"
+					android:theme="@android:style/Theme.NoTitleBar.Fullscreen" android:name=".UI.EasyPhoneActivity">
+		</activity>
+		
+		<activity android:screenOrientation="portrait"
+					android:theme="@android:style/Theme.NoTitleBar.Fullscreen" android:name=".UI.MissedCalls">
 		</activity>
 		
 		<receiver
@@ -103,4 +100,6 @@
 <uses-permission android:name="android.permission.READ_SMS"></uses-permission>
 <uses-permission android:name="android.permission.RECEIVE_SMS"></uses-permission>
 <uses-permission android:name="android.permission.WRITE_SMS"></uses-permission>
+<uses-permission android:name="android.permission.READ_LOGS"></uses-permission>
+<uses-permission android:name="android.permission.WRITE_CONTACTS"></uses-permission>
 </manifest> 

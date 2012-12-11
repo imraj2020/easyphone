@@ -1,4 +1,4 @@
-package android.easyphone;
+package android.easyphone.UI;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -9,6 +9,9 @@ import java.util.Locale;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.AssetManager;
+import android.easyphone.CallControl;
+import android.easyphone.R;
+import android.easyphone.Utils;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
@@ -46,6 +49,9 @@ public class easyphone extends EasyPhoneActivity implements OnInitListener{
 
         //Config SMSManager
         Utils.configSMSManager(getApplicationContext());
+        
+        // Config CallsManager
+        Utils.configCallsManager(getApplicationContext());
         
 		//Set Menu Options
         mMenu.setTitle((String) ((TextView)this.findViewById(R.id.TextView01)).getText());
@@ -105,7 +111,9 @@ public class easyphone extends EasyPhoneActivity implements OnInitListener{
 	    	case 4: //Unanswered calls
 	    	{
 	    		Log.v(EASYPHONE_TAG, "unanswered calls");
-	    		
+	    		//Call
+	    		Intent missedCalls =  new Intent(getApplicationContext(), MissedCalls.class);
+	    		startActivity(missedCalls);
 	    		break;
 	    	}
     	}

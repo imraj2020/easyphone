@@ -1,9 +1,11 @@
-package android.easyphone;
+package android.easyphone.UI;
 
 import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.easyphone.R;
+import android.easyphone.Utils;
 import android.easyphone.SMS.SMS;
 import android.os.Bundle;
 import android.view.ViewGroup.LayoutParams;
