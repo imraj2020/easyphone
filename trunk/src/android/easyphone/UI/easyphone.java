@@ -74,16 +74,7 @@ public class easyphone extends EasyPhoneActivity implements OnInitListener{
     	
     	switch(option)
     	{
-	    	case 0:  //Make call
-	    	{
-	    		Log.v(EASYPHONE_TAG, "make call");
-	    		//Call
-	    		Intent contactList =  new Intent(getApplicationContext(), ContactList.class);
-	    		contactList.putExtra("contactListType", "priority");
-	    		startActivity(contactList);
-	    		break;
-	    	}
-	    	case 1: //Clock
+	    	case 0:  // clock
 	    	{
 	    		Log.v(EASYPHONE_TAG, "clock");
 	    		Time now = new Time();
@@ -91,6 +82,16 @@ public class easyphone extends EasyPhoneActivity implements OnInitListener{
 	    		int hour = now.hour;
 	    		int minute = now.minute;
 	    		easyphone.mTTS.speak("São " + hour + "horas e " + minute + "minutos", TextToSpeech.QUEUE_ADD, null);
+	    		break;
+	    		
+	    	}
+	    	case 1: // make call
+	    	{
+	    		Log.v(EASYPHONE_TAG, "make call");
+	    		//Call
+	    		Intent contactList =  new Intent(getApplicationContext(), ContactList.class);
+	    		contactList.putExtra("contactListType", "priority");
+	    		startActivity(contactList);
 	    		break;
 	    	}
 	    	case 2: //Battery
@@ -102,7 +103,6 @@ public class easyphone extends EasyPhoneActivity implements OnInitListener{
 	    	case 3: //Text Messages
 	    	{
 	    		Log.v(EASYPHONE_TAG, "messages");
-	    		//Call
 	    		Intent messageList =  new Intent(getApplicationContext(), MessageList.class);
 	    		messageList.putExtra("messageListType", "priority");
 	    		startActivity(messageList);
@@ -111,7 +111,6 @@ public class easyphone extends EasyPhoneActivity implements OnInitListener{
 	    	case 4: //Unanswered calls
 	    	{
 	    		Log.v(EASYPHONE_TAG, "unanswered calls");
-	    		//Call
 	    		Intent missedCalls =  new Intent(getApplicationContext(), MissedCalls.class);
 	    		startActivity(missedCalls);
 	    		break;
@@ -156,6 +155,8 @@ public class easyphone extends EasyPhoneActivity implements OnInitListener{
     	
     	if(status == TextToSpeech.SUCCESS)
     	{
+    		this.mMenu.setUtteranceCallback();
+    		
     		Locale locale = Locale.getDefault();
     		mTTS.setLanguage(locale);
     		mTTS.addEarcon("click", "/sdcard/EasyPhone/click.wav");

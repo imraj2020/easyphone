@@ -5,9 +5,8 @@
     android:layout_height="fill_parent">
     
 <TextView android:textStyle="bold" android:id="@+id/TextView01" android:textColor="#dddddd" android:typeface="sans" android:layout_height="wrap_content" android:layout_width="fill_parent" android:text="Menu Inicial" android:textSize="25sp"></TextView>
-
-<TextView android:id="@+id/TextView02" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="1, Efectuar Chamada" android:typeface="sans" android:textStyle="bold" android:textSize="18sp" android:textColor="#dddddd"/>
-<TextView android:id="@+id/TextView03" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="2, Relógio" android:typeface="sans" android:textStyle="bold" android:textSize="18sp" android:textColor="#dddddd"/>
+<TextView android:id="@+id/TextView02" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="1, Relógio" android:typeface="sans" android:textStyle="bold" android:textSize="18sp" android:textColor="#dddddd"/>
+<TextView android:id="@+id/TextView03" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="2, Efectuar Chamada" android:typeface="sans" android:textStyle="bold" android:textSize="18sp" android:textColor="#dddddd"/>
 <TextView android:id="@+id/TextView04" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="3, Bateria" android:typeface="sans" android:textStyle="bold" android:textSize="18sp" android:textColor="#dddddd"/>
 <TextView android:id="@+id/TextView05" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="4, Mensagens" android:typeface="sans" android:textStyle="bold" android:textSize="18sp" android:textColor="#dddddd"/>
 <TextView android:id="@+id/TextView06" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="5, Chamadas não Atendidas" android:typeface="sans" android:textStyle="bold" android:textSize="18sp" android:textColor="#dddddd"/>
