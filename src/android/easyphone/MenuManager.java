@@ -18,7 +18,7 @@ public class MenuManager implements OnUtteranceCompletedListener {
     private boolean mIsScanning = false;
     private final int NCYCLES = 2;
     private int READ_TITLE_TIME = 0; //ms
-    private int READ_OPTION_TIME = 0; //ms
+    private int READ_OPTION_TIME = 2000; //ms
     private HashMap<String, String> mTitleParams = null;
     private HashMap<String, String> mOptionParams = null;
 	
@@ -105,8 +105,8 @@ public class MenuManager implements OnUtteranceCompletedListener {
 		
 		if(easyphone.mTTS == null) return;
 		
-		setUtteranceCallback();
 		mIsScanning = true;
+		setUtteranceCallback();
 		
 		// read title
 	    if(readTitle) readTitle();
@@ -118,7 +118,7 @@ public class MenuManager implements OnUtteranceCompletedListener {
 		Log.v(easyphone.EASYPHONE_TAG, "MenuManager.readTitle()");
 		if(easyphone.callControl.inCall) return; //no options are read when incall mode
 		
-    	easyphone.mTTS.speak(mTitle, TextToSpeech.QUEUE_ADD, mTitleParams);
+    	easyphone.mTTS.speak(mTitle, TextToSpeech.QUEUE_FLUSH, mTitleParams);
 	}
 	
 	private void readNextOption()
@@ -143,7 +143,7 @@ public class MenuManager implements OnUtteranceCompletedListener {
 		}
 		
 		//read current options
-		easyphone.mTTS.speak(mOptions.get(mCurrentOption), TextToSpeech.QUEUE_ADD, mOptionParams); //add to queue, after earcon
+		easyphone.mTTS.speak(mOptions.get(mCurrentOption), TextToSpeech.QUEUE_FLUSH, mOptionParams); //add to queue, after earcon
 	}
 	
 	/* TTS Callback */
@@ -158,7 +158,7 @@ public class MenuManager implements OnUtteranceCompletedListener {
     	if(uttID.equalsIgnoreCase("title"))
     	{
     		//finish reading title
-    		Log.v(easyphone.EASYPHONE_TAG, "finish reading title");
+    		Log.v(easyphone.EASYPHONE_TAG, "finish reading title, time waiting: " + READ_TITLE_TIME);
     		Timer t = new Timer();
     		t.schedule(new TimerTask() {
 				
@@ -173,7 +173,7 @@ public class MenuManager implements OnUtteranceCompletedListener {
     	else if(uttID.equalsIgnoreCase("option"))
     	{
     		// finish reading option
-    		Log.v(easyphone.EASYPHONE_TAG, "finish reading option");
+    		Log.v(easyphone.EASYPHONE_TAG, "finish reading option, time waiting: " + READ_OPTION_TIME);
     		Timer t = new Timer();
     		t.schedule(new TimerTask() {
 				

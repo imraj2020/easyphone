@@ -81,7 +81,7 @@ public class MessageList extends EasyPhoneActivity{
         {
         	optionCount++;
         	String name = Utils.getFormatedPhoneNumber(getApplicationContext(), mSMS.get(i).number);
-        	mMenu.addOption(optionCount + ", " + name + ", enviada a " + mSMS.get(i).date.getDate() + " do " + mSMS.get(i).date.getMonth());
+        	mMenu.addOption(optionCount + ", " + name + ", recebida a " + mSMS.get(i).date.getDate() + " do " + mSMS.get(i).date.getMonth());
         }
         
         if(mSMS.size() >= NMESSAGES && !mListType.equalsIgnoreCase("all"))
