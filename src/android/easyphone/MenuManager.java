@@ -110,6 +110,7 @@ public class MenuManager implements OnUtteranceCompletedListener {
 		
 		// read title
 	    if(readTitle) readTitle();
+	    else readNextOption();
 	}
 	
 	private void readTitle()

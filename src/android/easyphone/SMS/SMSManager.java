@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.easyphone.Utils;
 import android.net.Uri;
+import android.provider.CallLog;
 import android.telephony.gsm.SmsManager;;
 
 public class SMSManager {
@@ -71,7 +72,7 @@ public class SMSManager {
 
         
             Uri mSmsQueryUri = Uri.parse("content://sms/inbox");
-            String columns[] = new String[] { "_id", "thread_id", "person", "address", "body", "date", "status"};
+            String columns[] = new String[] { "_id", "thread_id", "person", "address", "body", "date", "read"};
             Cursor c = mContext.getContentResolver().query(mSmsQueryUri, columns, null, null, null);
 
             if (c.getCount() > 0) {
@@ -85,6 +86,7 @@ public class SMSManager {
                     sms.sender = Utils.getString(c, "person");
                     sms.id = Utils.getString(c, "_id");
                     sms.threadid = Utils.getString(c, "thread_id");
+                    sms.unread = Utils.getString(c, "read").equalsIgnoreCase("0") ? true : false;
                     res.add(sms);
                 }
             }
@@ -92,6 +94,38 @@ public class SMSManager {
         return res;
     }
 
+    /**
+     * Returns the number of unread SMS
+     */
+    public int getUnreadSMS() 
+    {
+            Uri mSmsQueryUri = Uri.parse("content://sms/inbox");
+            Cursor c = mContext.getContentResolver().query(mSmsQueryUri, null, "read=0", null, null);
+            
+            int n = c.getCount();
+            c.close();
+            
+            return n;
+    }
+
+    /**
+     * Updates SMS as read 
+     */
+    public boolean setReceivedSMSAsRead(String id, String threadid)
+    {
+    	//uri
+    	Uri uri = Uri.parse( "content://sms");
+    	// where
+        String where = "thread_id=? and _id=?";
+        //values
+        ContentValues values = new ContentValues();
+        values.put("read", "1");
+        //query
+    	int updated = mContext.getContentResolver().update(uri, values, where, new String[]{threadid, id});
+    	
+    	return updated == 0 ? false : true;
+    }
+    
     /**
      * Deletes the sms with id and threadid 
      */

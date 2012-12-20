@@ -9,6 +9,7 @@ public class SMS implements Comparable<SMS> {
     public Date date;
     public String id;
     public String threadid;
+    public boolean unread;
 
     public int compareTo(SMS another) {
         return date.compareTo(another.date);

@@ -29,9 +29,6 @@ public class MessageList extends EasyPhoneActivity{
         // get list type 
         mListType = (String) getIntent().getExtras().get("messageListType");
         
-        // set menu title
-        mMenu.setTitle((String) ((TextView)this.findViewById(R.id.tvTitle)).getText());
-        
         updateMenuOptions();
     }
 
@@ -54,6 +51,18 @@ public class MessageList extends EasyPhoneActivity{
         
 		// get all received sms ordered by date
         mSMS = Utils.mSMSManager.getAllReceivedSMS();
+        int nUnreadSMS = Utils.mSMSManager.getUnreadSMS();
+        
+        // set menu title
+        if(nUnreadSMS == 0)
+        {
+        	mMenu.setTitle((String) ((TextView)this.findViewById(R.id.tvTitle)).getText());
+        }
+        else
+        {
+        	String sms = nUnreadSMS == 1? " nova mensagem" : " novas mensagens";
+        	mMenu.setTitle("Tem " + Utils.getFeminine(nUnreadSMS) + sms);
+        }
         
         int maxOptions = mSMS.size() + 1;
         if(!mListType.equalsIgnoreCase("all")) maxOptions = NMESSAGES; // if priority only add NMESSAGES items
@@ -123,6 +132,7 @@ public class MessageList extends EasyPhoneActivity{
     			message.putExtra("minutes", sms.date.getMinutes());
     			message.putExtra("id", sms.id);
     			message.putExtra("threadid", sms.threadid);
+    			message.putExtra("unread", sms.unread);
     			mReadMenu = false;
     			startActivityForResult(message, 0);
     		}
@@ -141,6 +151,7 @@ public class MessageList extends EasyPhoneActivity{
 			message.putExtra("minutes", sms.date.getMinutes());
 			message.putExtra("id", sms.id);
 			message.putExtra("threadid", sms.threadid);
+			message.putExtra("unread", sms.unread);
 			mReadMenu = false;
     		startActivityForResult(message, 0);
     	}
@@ -150,26 +161,7 @@ public class MessageList extends EasyPhoneActivity{
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     	super.onActivityResult(requestCode, resultCode, data);
     	
-    	if(requestCode == 0)
-    	{
-	    	if(resultCode == RESULT_OK)
-	    	{
-	    		//message deleted
-	    		mUpdate = true;
-	    		
-	    		// update message list
-	    		updateMenuOptions();
-	    	}
-    	}
-    	else if(requestCode == 1)
-    	{
-    		if(resultCode == RESULT_OK)
-	    	{
-    			
-    			// update message list
-	    		updateMenuOptions();
-	    	}
-    	}
+    	updateMenuOptions();
     	mMenu.startScanning(true);;
     }
     

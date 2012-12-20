@@ -380,6 +380,19 @@ public class Utils {
 	    }
 	}
     
+    public static String getFeminine(int count)
+    {
+    	switch(count)
+    	{
+    	case 1:
+    		return "uma";
+    	case 2:
+    		return "duas";
+    	}
+    	
+    	return String.valueOf(count);
+    }
+    
     /* SMS Manager*/
     public static void configSMSManager(Context context)
     {
