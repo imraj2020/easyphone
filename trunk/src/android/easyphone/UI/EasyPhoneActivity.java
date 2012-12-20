@@ -85,7 +85,7 @@ public class EasyPhoneActivity extends Activity
     	Log.v(EASYPHONE_TAG, mName + ".onStart()");
     	super.onStart();
     	
-    	if(mReadMenu)	mMenu.startScanning(true);
+    	if(mReadMenu)	startScanningMenu(true);
     }
     
     @Override
@@ -165,14 +165,19 @@ public class EasyPhoneActivity extends Activity
             	  }
             	  else
             	  {
-            		//is not scanning, thus start scanning
-            		  mMenu.startScanning(true);
+            		  //is not scanning, thus start scanning
+            		  startScanningMenu(true);
             	  }
             	  
                   break;
               }
             }
     	return true;
+    }
+    
+    protected void startScanningMenu(boolean readTitle)
+    {
+    	mMenu.startScanning(readTitle);
     }
     
     @Override

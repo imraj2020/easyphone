@@ -30,6 +30,7 @@ public class Message extends EasyPhoneActivity{
         		(Integer)getIntent().getExtras().get("hour"), (Integer)getIntent().getExtras().get("minutes"));        
         mSMS.id = (String)getIntent().getExtras().get("id");
         mSMS.threadid = (String)getIntent().getExtras().get("threadid");
+        mSMS.unread = ((Boolean)getIntent().getExtras().get("unread")).booleanValue();
         
         // set menu title
         mMenu.setTitle((String) ((TextView)this.findViewById(R.id.tvTitle)).getText());
@@ -56,6 +57,10 @@ public class Message extends EasyPhoneActivity{
     	case 1:
     		// read
     		easyphone.mTTS.speak(mSMS.message, TextToSpeech.QUEUE_ADD, null);
+    		
+    		if(mSMS.unread) 
+    			if(Utils.mSMSManager.setReceivedSMSAsRead(mSMS.id, mSMS.threadid))
+    				mSMS.unread = false;
     		break;
     	case 2:
     		// delete

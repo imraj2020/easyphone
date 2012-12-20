@@ -55,6 +55,23 @@ public class CallsManager {
     	return result;
     }
     
+    /*
+     * Returns the number of new missedCalls
+     */
+    public int getMissedCallsCount()
+    {
+    	// columns
+    	String[] projection = { CallLog.Calls.TYPE, CallLog.Calls.NEW};
+    	// where
+        String where = CallLog.Calls.TYPE+"="+CallLog.Calls.MISSED_TYPE+" AND "+CallLog.Calls.NEW+"!=0";
+        //query
+        Cursor c = mContext.getContentResolver().query(CallLog.Calls.CONTENT_URI, projection, where, null, null);        
+        int n = c.getCount();
+        c.close();
+        
+        return n;
+    }
+    
     /**
      * Clear new missed calls 
      */

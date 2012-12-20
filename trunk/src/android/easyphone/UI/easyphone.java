@@ -53,8 +53,10 @@ public class easyphone extends EasyPhoneActivity implements OnInitListener{
         // Config CallsManager
         Utils.configCallsManager(getApplicationContext());
         
-		//Set Menu Options
+        // set title
         mMenu.setTitle((String) ((TextView)this.findViewById(R.id.TextView01)).getText());
+        
+		//Set Menu Options
         mMenu.addOption((String) ((TextView)this.findViewById(R.id.TextView02)).getText());
         mMenu.addOption((String) ((TextView)this.findViewById(R.id.TextView03)).getText());
         mMenu.addOption((String) ((TextView)this.findViewById(R.id.TextView04)).getText());
@@ -66,6 +68,57 @@ public class easyphone extends EasyPhoneActivity implements OnInitListener{
         
         // Screen state receiver
         Utils.registerScreenStateListener(getApplicationContext());
+    }
+    
+    @Override
+    protected void startScanningMenu(boolean readTitle)
+    {
+    	try
+    	{
+    	//check if there are notifications
+    	int nMissedCalls = Utils.mCallsManager.getMissedCallsCount();
+    	int nUnreadSMS = Utils.mSMSManager.getUnreadSMS();
+    	boolean notification = false;
+    	String title = "";
+    	
+    	//set title
+    	if(nMissedCalls > 0)
+    	{
+    		notification = true;
+    		String call = nMissedCalls == 1? " chamada não atendida" : " chamadas não atendidas";
+    		title += "Tem " + Utils.getFeminine(nMissedCalls) + call;
+    	}
+    	
+    	if(nUnreadSMS > 0)
+    	{
+    		notification = true;
+    		if(nMissedCalls > 0)
+    		{
+    			title += ", e ";
+    		}
+    		else
+    		{
+    			title += "Tem ";
+    		}
+    		String sms = nUnreadSMS == 1? " nova mensagem" : " novas mensagens";
+    		title += Utils.getFeminine(nUnreadSMS) + sms;
+    	}
+    	
+    	title += (nMissedCalls > 0 || nUnreadSMS > 0) ? ". " : "";
+    	title += (String) ((TextView)this.findViewById(R.id.TextView01)).getText();
+    	
+    	if(notification) mTTS.playEarcon("notification2", TextToSpeech.QUEUE_FLUSH, null);
+    	
+    	mMenu.setTitle(title);
+    	}
+    	catch(Exception e)
+    	{
+    		
+    	}
+    	finally
+    	{
+    		super.startScanningMenu(readTitle);
+    	}
     }
     
     protected void selectOption(int option)
@@ -165,6 +218,8 @@ public class easyphone extends EasyPhoneActivity implements OnInitListener{
     		mTTS.addEarcon("screenon", "/sdcard/EasyPhone/screenon.wav");
     		mTTS.addEarcon("screenoff", "/sdcard/EasyPhone/screenoff.wav");
     		mTTS.addEarcon("exit", "/sdcard/EasyPhone/exit.wav");
+    		mTTS.addEarcon("notification", "/sdcard/EasyPhone/notification.wav");
+    		mTTS.addEarcon("notification2", "/sdcard/EasyPhone/notification2.wav");
     		
     		if(!startedSound) mTTS.playEarcon("startup", TextToSpeech.QUEUE_FLUSH, null);
     		startedSound = true;
