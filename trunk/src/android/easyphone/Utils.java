@@ -260,13 +260,13 @@ public class Utils {
 		else
 		{
 			priorityContactsList.add(new Pair<String, String>("Outros contactos", ""));
-			priorityContactsList.add(new Pair<String, String>("Voltar atrás", ""));
+			//priorityContactsList.add(new Pair<String, String>("Voltar atrás", ""));
 			if(lessThanMiddleThreshold)
 			{
 				if (!smallContactsList.isEmpty())
 				{
 					Collections.sort(smallContactsList, new pairComparator());
-					smallContactsList.add(new Pair<String, String>("Voltar atrás", ""));
+					//smallContactsList.add(new Pair<String, String>("Voltar atrás", ""));
 				}
 			}
 			else
@@ -277,19 +277,18 @@ public class Utils {
 				smallContactsList.add(new Pair<String, String>("iii, a, n", ""));
 				smallContactsList.add(new Pair<String, String>("ó, a, t", ""));
 				smallContactsList.add(new Pair<String, String>("u, a, z", ""));
-				smallContactsList.add(new Pair<String, String>("Voltar atrás", ""));
-				
+				//smallContactsList.add(new Pair<String, String>("Voltar atrás", ""));
 				
 				Collections.sort(a_dContactsList, new pairComparator());
 				Collections.sort(e_hContactsList, new pairComparator());
 				Collections.sort(i_nContactsList, new pairComparator());
 				Collections.sort(o_tContactsList, new pairComparator());
 				Collections.sort(u_zContactsList, new pairComparator());
-				a_dContactsList.add(new Pair<String, String>("Voltar atrás", ""));
+				/*a_dContactsList.add(new Pair<String, String>("Voltar atrás", ""));
 				e_hContactsList.add(new Pair<String, String>("Voltar atrás", ""));
 				i_nContactsList.add(new Pair<String, String>("Voltar atrás", ""));
 				o_tContactsList.add(new Pair<String, String>("Voltar atrás", ""));
-				u_zContactsList.add(new Pair<String, String>("Voltar atrás", ""));
+				u_zContactsList.add(new Pair<String, String>("Voltar atrás", ""));*/
 				
 			}
 		}

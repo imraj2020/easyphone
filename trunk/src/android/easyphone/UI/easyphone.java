@@ -45,7 +45,7 @@ public class easyphone extends EasyPhoneActivity implements OnInitListener{
         startActivityForResult(checkIntent, MY_DATA_CHECK_CODE); //wait for activity result
        
         //Get Contacts from Phone Contact List
-        //Utils.getAllContacts(getApplicationContext());
+        Utils.getAllContacts(getApplicationContext());
 
         //Config SMSManager
         Utils.configSMSManager(getApplicationContext());

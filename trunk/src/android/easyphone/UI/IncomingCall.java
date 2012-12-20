@@ -48,7 +48,6 @@ public class IncomingCall extends EasyPhoneActivity{
         	((TextView)this.findViewById(R.id.TextView01)).setText("Chamada de, " + aux);
         }
         
-        mMenu = new MenuManager(3500, 7000);
         mMenu.setTitle((String) ((TextView)this.findViewById(R.id.TextView01)).getText());
         mMenu.addOption((String) ((TextView)this.findViewById(R.id.TextView02)).getText());
         mMenu.addOption((String) ((TextView)this.findViewById(R.id.TextView03)).getText());
