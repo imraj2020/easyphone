@@ -11,6 +11,7 @@ import android.easyphone.R.layout;
 import android.easyphone.SMS.SMS;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.util.Log;
 import android.widget.TextView;
 
 public class Message extends EasyPhoneActivity{
@@ -33,7 +34,7 @@ public class Message extends EasyPhoneActivity{
         mSMS.unread = ((Boolean)getIntent().getExtras().get("unread")).booleanValue();
         
         // set menu title
-        mMenu.setTitle((String) ((TextView)this.findViewById(R.id.tvTitle)).getText());
+        mMenu.setTitle((String) ((TextView)this.findViewById(R.id.tvTitle)).getText() + " " + Utils.getFormatedPhoneNumber(getApplicationContext(), mSMS.number));
         
         // set menu Options
         mMenu.addOption((String) ((TextView)this.findViewById(R.id.tvBack)).getText());
@@ -86,7 +87,7 @@ public class Message extends EasyPhoneActivity{
     		break;
     	case 3:
     		easyphone.mTTS.speak("Enviada por " + Utils.getFormatedPhoneNumber(getApplicationContext(), mSMS.number) + ", na data de " + 
-    				mSMS.date.getDate() + " de " + mSMS.date.getMonth() + " de " + mSMS.date.getYear() + 
+    				mSMS.date.getDate() + " de " + (mSMS.date.getMonth() + 1) + " de " + (mSMS.date.getYear() + 1900) + 
     				", pelas " + mSMS.date.getHours() + " horas e " + mSMS.date.getMinutes() + " minutos",
     				TextToSpeech.QUEUE_ADD, null);
     		break;
