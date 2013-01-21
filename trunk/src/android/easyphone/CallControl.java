@@ -17,6 +17,8 @@
 package android.easyphone;
 
 import java.lang.reflect.Method;
+
+import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -25,6 +27,7 @@ import android.easyphone.UI.easyphone;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.RemoteException;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import com.android.internal.telephony.ITelephony;
@@ -98,24 +101,22 @@ public class CallControl extends BroadcastReceiver {
 			Log.v(easyphone.EASYPHONE_TAG, "Call accepted...");
 	        wasRinging = false;
 	        
-			new Handler().postDelayed(new Runnable() 
-			{
-				public void run() 
-			    {
-					AudioManager mAudioManager = (AudioManager)CallControl.this.context.getSystemService(Context.AUDIO_SERVICE);
-					int mode = mAudioManager.getMode();
-			    	mAudioManager.setMode(AudioManager.MODE_IN_CALL);
-			    	if(!mAudioManager.isWiredHeadsetOn()) mAudioManager.setSpeakerphoneOn(true);
-			    	mAudioManager.setMode(mode);
-					
-					//launch new dialer UI
-					Log.v(TAG, "Launching new dialer activity ...");
-			        Intent intentInCall = new Intent(CallControl.this.context, InCall.class);
-			        intentInCall.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			        context.startActivity(intentInCall);
-			        wasInCall = true;
-			    }
-			 }, 1000);
+				new Handler().postDelayed(new Runnable() 
+				{
+					public void run() 
+				    {
+						/*AudioManager mAudioManager = (AudioManager)CallControl.this.context.getSystemService(Context.AUDIO_SERVICE);
+				    	mAudioManager.setMode(AudioManager.MODE_IN_CALL);
+				    	if(!mAudioManager.isWiredHeadsetOn()) mAudioManager.setSpeakerphoneOn(true);*/
+						
+						//launch new dialer UI
+						Log.v(TAG, "Launching new dialer activity ...");
+				        Intent intentInCall = new Intent(CallControl.this.context, InCall.class);
+				        intentInCall.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				        context.startActivity(intentInCall);
+				        wasInCall = true;
+				    }
+				 }, 1000);
 		}
 		else{
 			Log.v(TAG, "[No Call Handling]");
@@ -177,6 +178,7 @@ public class CallControl extends BroadcastReceiver {
 		try {
 			if(telephonyService == null) getTelephonyService();
 			telephonyService.call(number);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			Log.d(TAG,

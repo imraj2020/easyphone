@@ -38,13 +38,13 @@ public class MissedCalls extends EasyPhoneActivity{
         	if(mMissedCalls.get(i).name != null)
         	{
         		mMenu.addOption((i+2) + ", " + mMissedCalls.get(i).name + ", no dia " + mMissedCalls.get(i).date.getDate() + 
-        				" do " + mMissedCalls.get(i).date.getMonth() + " pelas " + mMissedCalls.get(i).date.getHours() + " horas e " + 
+        				" do " + (mMissedCalls.get(i).date.getMonth() + 1) + " pelas " + mMissedCalls.get(i).date.getHours() + " horas e " + 
         				mMissedCalls.get(i).date.getMinutes() + " minutos");
         	}
         	else
         	{
         		mMenu.addOption((i+2) + ", " + Utils.getFormatedPhoneNumber(getApplicationContext(), mMissedCalls.get(i).number) + 
-        				", no dia " + mMissedCalls.get(i).date.getDate() + " do " + mMissedCalls.get(i).date.getMonth() + 
+        				", no dia " + mMissedCalls.get(i).date.getDate() + " do " + (mMissedCalls.get(i).date.getMonth() + 1) + 
         				" pelas " + mMissedCalls.get(i).date.getHours() + " horas e " +	mMissedCalls.get(i).date.getMinutes() + " minutos");
         	}
         }
@@ -57,6 +57,7 @@ public class MissedCalls extends EasyPhoneActivity{
     	if(option == 0)
     	{
     		// back
+    		mMenu.stopScanning();
     		// clear new missed calls
     		Utils.mCallsManager.clearMissedCalls();
     		

@@ -6,12 +6,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Locale;
+
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.AssetManager;
 import android.easyphone.CallControl;
 import android.easyphone.R;
 import android.easyphone.Utils;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
@@ -68,6 +71,9 @@ public class easyphone extends EasyPhoneActivity implements OnInitListener{
         
         // Screen state receiver
         Utils.registerScreenStateListener(getApplicationContext());
+        
+        AudioManager mAudioManager = (AudioManager)this.getSystemService(Context.AUDIO_SERVICE);
+        mAudioManager.setMode(AudioManager.MODE_NORMAL);
     }
     
     @Override

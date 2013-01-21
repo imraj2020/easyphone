@@ -94,7 +94,7 @@ public class EasyPhoneActivity extends Activity
     	Log.v(EASYPHONE_TAG, mName + ".onStop()");
     	
     	// stop menu reading
-    	mMenu.stopScanning();
+    	//mMenu.stopScanning();
     	
     	super.onStop();
     }
@@ -251,6 +251,7 @@ public class EasyPhoneActivity extends Activity
     {
     	Log.v(EASYPHONE_TAG, mName + ".selectOption() - " + option);
     	easyphone.mTTS.playEarcon("click", TextToSpeech.QUEUE_FLUSH, null);
+    	mMenu.stopScanning();
     }
     
     /* CONTAINER CLASS AND DISPATCHING METHODS */

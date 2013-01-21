@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.easyphone.CallControl;
 import android.easyphone.MenuManager;
 import android.easyphone.R;
 import android.easyphone.Utils;
@@ -32,29 +33,13 @@ public class InCall extends EasyPhoneActivity {
         mMenu.setTitle((String) ((TextView)this.findViewById(R.id.TextView01)).getText());
         mMenu.addOption((String) ((TextView)this.findViewById(R.id.TextView02)).getText());
         
-        //Turn Speaker ON
-		mAudioManager = (AudioManager)InCall.this.getSystemService(Context.AUDIO_SERVICE);
-		
-		//Log.v(EASYPHONE_TAG, "isHeadsetOn: " + mAudioManager.isWiredHeadsetOn());
-		int mode = mAudioManager.getMode();
-    	mAudioManager.setMode(AudioManager.MODE_IN_CALL);
-    	if(!mAudioManager.isWiredHeadsetOn()) mAudioManager.setSpeakerphoneOn(true);
-    	mAudioManager.setMode(mode);
-		//else mAudioManager.setSpeakerphoneOn(false);*/
+        mAudioManager = (AudioManager)InCall.this.getBaseContext().getSystemService(Context.AUDIO_SERVICE);
     }
     
     @Override
     public void onStart()
     {
     	super.onStart();
-    	
-    	//Turn Speaker ON
-    	Log.v(EASYPHONE_TAG, "isHeadsetOn: " + mAudioManager.isWiredHeadsetOn());
-    	int mode = mAudioManager.getMode();
-    	mAudioManager.setMode(AudioManager.MODE_IN_CALL);
-    	if(!mAudioManager.isWiredHeadsetOn()) mAudioManager.setSpeakerphoneOn(true);
-    	mAudioManager.setMode(mode);
-    	//else mAudioManager.setSpeakerphoneOn(false);*/
     }
     
     @Override
@@ -62,13 +47,8 @@ public class InCall extends EasyPhoneActivity {
     {
     	super.onResume();
     	
-    	//Turn Speaker ON
-    	Log.v(EASYPHONE_TAG, "isHeadsetOn: " + mAudioManager.isWiredHeadsetOn());
-    	int mode = mAudioManager.getMode();
     	mAudioManager.setMode(AudioManager.MODE_IN_CALL);
     	if(!mAudioManager.isWiredHeadsetOn()) mAudioManager.setSpeakerphoneOn(true);
-    	mAudioManager.setMode(mode);
-    	/*else mAudioManager.setSpeakerphoneOn(false);*/
     }
     
     @Override
@@ -146,6 +126,7 @@ public class InCall extends EasyPhoneActivity {
     	//Turn Speaker OFF
     	mAudioManager.setMode(AudioManager.MODE_IN_CALL);
     	mAudioManager.setSpeakerphoneOn(false);
+    	mAudioManager.setMode(AudioManager.MODE_NORMAL);
     	super.finish();
     }
     

@@ -21,6 +21,7 @@ public class MenuManager implements OnUtteranceCompletedListener {
     private int READ_OPTION_TIME = 2000; //ms
     private HashMap<String, String> mTitleParams = null;
     private HashMap<String, String> mOptionParams = null;
+    private Timer t = null;
 	
 	public MenuManager() 
 	{
@@ -123,11 +124,17 @@ public class MenuManager implements OnUtteranceCompletedListener {
 	
 	private void readNextOption()
 	{
-		if(mOptions.size() == 0 || mIsScanning == false) return;
+		Log.v(easyphone.EASYPHONE_TAG, "readNextOption()");
+		if(mOptions.size() == 0 || mIsScanning == false) 
+		{ 
+			Log.v(easyphone.EASYPHONE_TAG, "scanning ended optionSize: " + mOptions.size() + " flag: " + mIsScanning); 
+			return;
+		}
 		
 		//if last option and last cycle, then stop timer
 		if(mCurrentCycle == NCYCLES && mCurrentOption == mOptions.size() - 1)
 		{
+			Log.v(easyphone.EASYPHONE_TAG, "readNextOption() - last option & last cycle");
 			stopScanning();
 			return;
 		}
@@ -159,7 +166,7 @@ public class MenuManager implements OnUtteranceCompletedListener {
     	{
     		//finish reading title
     		Log.v(easyphone.EASYPHONE_TAG, "finish reading title, time waiting: " + READ_TITLE_TIME);
-    		Timer t = new Timer();
+    		t = new Timer();
     		t.schedule(new TimerTask() {
 				
 				@Override
@@ -174,7 +181,7 @@ public class MenuManager implements OnUtteranceCompletedListener {
     	{
     		// finish reading option
     		Log.v(easyphone.EASYPHONE_TAG, "finish reading option, time waiting: " + READ_OPTION_TIME);
-    		Timer t = new Timer();
+    		t = new Timer();
     		t.schedule(new TimerTask() {
 				
 				@Override
@@ -190,6 +197,8 @@ public class MenuManager implements OnUtteranceCompletedListener {
 	public void stopScanning()
 	{
 		Log.v(easyphone.EASYPHONE_TAG, "MenuManager.stopScanning()");
+		easyphone.mTTS.stop();
+		if( t != null) t.cancel();
 		mIsScanning = false;
 		mCurrentOption = -1;
 		mCurrentCycle = 1;
