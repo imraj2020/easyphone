@@ -71,9 +71,9 @@ public class ContactList extends EasyPhoneActivity {
 			setResult(Activity.RESULT_CANCELED, resultIntent);
     		this.finish();
     	}
-    	else if(option==contactsList.size()-1 && Utils.getNumberOfContacts() > Utils.lowContactThreshold && contactListType.equalsIgnoreCase("priority"))
+    	else if(option==contactsList.size() && Utils.getNumberOfContacts() > Utils.lowContactThreshold && contactListType.equalsIgnoreCase("priority"))
     	{
-    		// other contacts
+    		// other contacts - last element of priority contactsList
     		Intent contactList =  new Intent(getApplicationContext(), ContactList.class);
     		contactList.putExtra("contactListType", "smallList");
     		startActivity(contactList);

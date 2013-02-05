@@ -256,8 +256,7 @@ public class Utils {
 		//Sort the contacts list
 		Collections.sort(priorityContactsList, new pairComparator());
 		
-		if(lessThanLowThreshold) priorityContactsList.add(new Pair<String, String>("Voltar atrás", ""));
-		else
+		if(!lessThanLowThreshold)
 		{
 			priorityContactsList.add(new Pair<String, String>("Outros contactos", ""));
 			//priorityContactsList.add(new Pair<String, String>("Voltar atrás", ""));
