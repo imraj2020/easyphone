@@ -1,0 +1,1 @@
+Project to help a blind tetraplegic resorting to android operating system
